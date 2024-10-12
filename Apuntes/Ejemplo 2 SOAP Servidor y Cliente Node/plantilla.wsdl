@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- El archivo .wsdl (Web Service Definition Lenguaje) define los servicios del proveedor y el formato de los mensajes -->
+<!-- Para cada servicio web debe hacer un archivo .wsdl -->
+
+
+<wsdl:definitions 
+    targetNamespace="http://localhost:8080/saludar"
+
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:tns="http://localhost:8080/saludar"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"> <!-- PONER LAS URLs QUE CORRESPONDEN -->
+
+    <!-- definitions: elemento raíz del documento .wsdl -->
+    <!-- targetNamespace: la dirección URL en donde se provee el servicio -->
+    <!-- 
+        Las siguientes declaraciones definen el namespace para varios componentes
+            xmlns:wsdl: Asocia el prefijo "wsdl" 
+            xmlns:tns:  Asocia el prefijo "tns"
+            xmlns:soap: Asocia el prefijo "soap" 
+            xmlns:xsd:  Asocia el prefijo "xsd"
+    -->
+
+    <wsdl:types> <!-- types: define los tipos de datos usados en los mensajes. Se basan en XSD (XML Schema Definition) -->
+        <xsd:schema targetNamespace="http://localhost:8080/saludar"> <!-- PONER LAS URLs QUE CORRESPONDEN -->
+
+        <xsd:element name="saludarRequest" type="tns:saludarRequest"/>
+        <xsd:element name="saludarResponse" type="tns:saludarResponse"/>
+        
+        <xsd:complexType name="saludarRequest">  <!-- Defino la request (solicitud del cliente) y los datos que va a mandar -->
+            <xsd:sequence>
+                <xsd:element name="nombre" type="xsd:string"/>
+            </xsd:sequence>
+        </xsd:complexType>
+        
+        <xsd:complexType name="saludarResponse"> <!-- Defino la response (respuesta del servidor) y los datos que va a mandar -->
+            <xsd:sequence>
+                <xsd:element name="saludo" type="xsd:string"/> 
+                <xsd:element name="saludoCordial" type="xsd:string"/>
+            </xsd:sequence>
+        </xsd:complexType>
+        
+        </xsd:schema>
+    </wsdl:types>
+
+
+
+
+    <!-- Defino los mensajes -->
+    <wsdl:message name="saludarRequestMessage">                    <!-- Mensaje request -->
+        <wsdl:part name="request" element="tns:saludarRequest"/>   <!-- Usa la definición de request -->
+    </wsdl:message>
+
+    <wsdl:message name="saludarResponseMessage">                   <!-- Mensaje response -->
+        <wsdl:part name="response" element="tns:saludarResponse"/> <!-- Usa la definición de response --> 
+    </wsdl:message>
+
+
+
+
+    <!-- Definición abstraca: portType -->
+    <wsdl:portType name="saludarPort">
+        <wsdl:operation name="saludar">                     <!-- Nombre de la operación técnica -->
+            <wsdl:input message="tns:saludarRequestMessage"/>   <!-- Mensaje request -->
+            <wsdl:output message="tns:saludarResponseMessage"/> <!-- Mensaje response -->
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <!-- Definición técnica: binding -->
+    <wsdl:binding name="saludarBinding" type="tns:saludarPort">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/> <!-- NOTA: El estilo rpc se considera desactualizado, hoy en dia se usa document -->
+        
+        <wsdl:operation name="saludar">
+        <soap:operation soapAction="http://example.com/Greeter/Greet"/>
+        
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        
+        </wsdl:operation>
+    </wsdl:binding>
+
+
+
+
+    <!-- Defino el servicio -->
+    <wsdl:service name="saludarService">
+        <wsdl:port name="saludarPort" binding="tns:saludarBinding">
+            <soap:address location="http://localhost:8080/saludar"/> <!-- PONER LAS URLs QUE CORRESPONDEN -->
+        </wsdl:port>
+    </wsdl:service>
+
+</wsdl:definitions>

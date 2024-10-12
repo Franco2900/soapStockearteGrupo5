@@ -1,0 +1,81 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "My API",
+    "description": "Description",
+    "version": "1.0.0"
+  },
+  "host": "localhost:3000/api",
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/database/{database}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "database",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/database/{database}/titulo/{tituloRevista}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "database",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "tituloRevista",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/database/{database}/ISSN/{issn}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "database",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "issn",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

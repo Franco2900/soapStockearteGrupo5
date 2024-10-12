@@ -1,0 +1,61 @@
+<wsdl:definitions 
+    targetNamespace="http://localhost:7000/crearCatalogo"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:tns="http://localhost:7000/crearCatalogo"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  
+    <wsdl:types>
+        <xsd:schema targetNamespace="http://localhost:7000/crearCatalogo">
+            <xsd:element name="crearCatalogoRequest" type="tns:crearCatalogoRequest"/>
+            <xsd:element name="crearCatalogoResponse" type="tns:crearCatalogoResponse"/>
+            
+            <xsd:complexType name="crearCatalogoRequest">
+                <xsd:sequence>
+                    <xsd:element name="codigos" type="xsd:string" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            
+            <xsd:complexType name="crearCatalogoResponse">
+                <xsd:sequence>
+                    <xsd:element name="mensaje" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            
+        </xsd:schema>
+    </wsdl:types>
+
+    <wsdl:message name="crearCatalogoRequestMessage">
+        <wsdl:part name="request" element="tns:crearCatalogoRequest"/>
+    </wsdl:message>
+
+    <wsdl:message name="crearCatalogoResponseMessage">
+        <wsdl:part name="response" element="tns:crearCatalogoResponse"/> 
+    </wsdl:message>
+
+    <wsdl:portType name="crearCatalogoPort">
+        <wsdl:operation name="crearCatalogo">
+            <wsdl:input message="tns:crearCatalogoRequestMessage"/>
+            <wsdl:output message="tns:crearCatalogoResponseMessage"/>
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <wsdl:binding name="crearCatalogoBinding" type="tns:crearCatalogoPort">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="crearCatalogo">
+            <soap:operation soapAction="http://example.com/Greeter/Greet"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:service name="crearCatalogoService">
+        <wsdl:port name="crearCatalogoPort" binding="tns:crearCatalogoBinding">
+            <soap:address location="http://localhost:7000/crearCatalogo"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
