@@ -2,7 +2,7 @@
 const conexionDataBase = require('./conexionDataBase.js');
 
 /************************************ MÓDULOS USADOS  **********************************/
-const PDFDocument = require('pdfkit'); // Módulo para trabajar con PDFs
+const PDFDocument = require('../node_modules/pdfkit'); // Módulo para trabajar con PDFs
 
 /********************** DEFINICIÓN DE SERVICIOS ***********************/
 

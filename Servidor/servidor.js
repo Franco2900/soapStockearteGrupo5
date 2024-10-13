@@ -10,7 +10,7 @@ const { servicioCatalogo } = require('./Logica/catalogoService');
 const archivoWSDLCatalogo = fs.readFileSync('./Logica/catalogo.wsdl' , 'utf8'); // Archivo WSDL
 
 // Logica punto 4
-const { servicioCargarUsuarios } = require('./Logica/cargaUsuariosService');
+const { servicioCargarUsuarios } = require('./Logica/cargarUsuariosService');
 const archivoWSDLCargarUsuarios = fs.readFileSync('./Logica/cargarUsuarios.wsdl' , 'utf8');
 
 /******************************************* CREACIÓN SERVIDOR ******************************************************/
