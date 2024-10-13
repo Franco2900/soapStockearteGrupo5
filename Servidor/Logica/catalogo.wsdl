@@ -18,7 +18,7 @@
             
             <xsd:complexType name="crearCatalogoResponse">
                 <xsd:sequence>
-                    <xsd:element name="mensaje" type="xsd:string"/>
+                    <xsd:element name="archivoPDF" type="xsd:base64Binary"/>
                 </xsd:sequence>
             </xsd:complexType>
             

@@ -1,5 +1,6 @@
 const soap = require('soap');
 const express = require('express');
+const fs = require('fs');
 
 const app = express();
 
@@ -60,6 +61,18 @@ app.post('/crearCatalogo', async (req, res) => {
         console.log("Respuesta del servidor: ");
         console.log(respuesta);
 
+        // Convertir el string base64 a un buffer
+        const pdfBuffer = Buffer.from(respuesta.archivoPDF, 'base64');
+        
+        // Escribir el buffer en un archivo PDF
+        fs.writeFile('catalogo.pdf', pdfBuffer, (error) => {
+            if (error) {
+                console.error('Error al escribir el archivo PDF:', error);
+            } else {
+                console.log('PDF creado exitosamente.');
+            }
+        });
+
         res.send(respuesta);
     }
     catch(error){
@@ -71,5 +84,5 @@ app.post('/crearCatalogo', async (req, res) => {
 
 // Iniciar el cliente en el puerto 7000
 app.listen(7000, () => {
-    console.log('Servidor ejecutándose en http://localhost:7000');
+    console.log('Cliente ejecutándose en http://localhost:7000');
 });
