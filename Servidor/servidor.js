@@ -27,6 +27,6 @@ soap.listen(server, '/crearCatalogo', servicioCatalogo, archivoWSDLCatalogo, fun
     console.log('Servidor SOAP escuchando en http://localhost:9000/crearCatalogo?wsdl'); // El server escucha en la ruta indicada y muestra el archivo WSDL al agregar ?wsdl a la ruta 
 });
 
-soap.listen(server, '/cargaUsuarios', servicioCargarUsuarios, archivoWSDLCargarUsuarios, function(){
-    console.log('Servidor SOAP escuchando en http://localhost:9000/cargaUsuarios?wsdl'); 
+soap.listen(server, '/cargarUsuarios', servicioCargarUsuarios, archivoWSDLCargarUsuarios, function(){
+    console.log('Servidor SOAP escuchando en http://localhost:9000/cargarUsuarios?wsdl'); 
 });

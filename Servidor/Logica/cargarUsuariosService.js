@@ -17,7 +17,7 @@ const servicioCargarUsuarios = {
                 console.log("Datos enviados por la solicitud del cliente: ", args);
         
                 // Defino la lógica del servicio
-                cargarUsuarios(args);
+                cargarUsuarios(args.archivoCSV);
         
                 // Defino la respuesta del servidor
                 const response = {
@@ -31,15 +31,22 @@ const servicioCargarUsuarios = {
 };
 
 
+
 async function cargarUsuarios(args)
 {
     try
     {
+        const archivoDecodificado = Buffer.from(args, 'base64'); // Decodifica la cadena Base64
+        
+        fs.writeFileSync("./datosDeUsuarios.csv", archivoDecodificado); // Escribe el archivo decodificado en la ruta de destino
+        console.log('Archivo CSV reconstruido y guardado');
+
+
         var datosUsuarios = await new Promise((resolve, reject) => {
  
             const results = [];
 
-            fs.createReadStream('./datosDePrueba.csv')
+            fs.createReadStream('./datosDeUsuarios.csv')
                 .pipe(csvParser({ separator: ';', headers:['Usuario', 'Password', 'Nombre', 'Apellido', 'CodigoTienda'] }) )
                 // Separo los datos por el punto y coma e indico cuales son los encabezados del archivo
                     .on('data', (fila) => {

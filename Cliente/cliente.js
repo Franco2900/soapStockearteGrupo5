@@ -22,17 +22,11 @@ async function crearClienteSoap(url)
 }
 
 
-var clienteSoap;
-
-(async function() {
-    clienteSoap = await crearClienteSoap('http://localhost:9000/crearCatalogo?wsdl'); // El cliente tiene que escuchar en la misma ruta que el servidor provee
-})();
-
-
 async function catalogo(args) 
 {
     try 
     {
+        var clienteSoap = await crearClienteSoap('http://localhost:9000/crearCatalogo?wsdl'); // El cliente tiene que escuchar en la misma ruta que el servidor provee
         const res = await clienteSoap.crearCatalogoAsync(args);
         return res[0]; // Devuelve 3 cosas: los datos procesados, la respuesta del servidor en formato XML y la solicitud enviada por el cliente en formato XML
     }
@@ -42,6 +36,20 @@ async function catalogo(args)
     }
 }
 
+
+async function usuarios(args) 
+{
+    try 
+    {
+        var clienteSoap = await crearClienteSoap('http://localhost:9000/cargarUsuarios?wsdl');
+        const res = await clienteSoap.cargarUsuariosAsync({ archivoCSV: args });
+        return res[0]; 
+    }
+    catch (error) 
+    {
+        console.error('Error al hacer la solicitud SOAP:', error);
+    }
+}
 
 /************************************** RUTAS ******************************************/
 
@@ -61,17 +69,36 @@ app.post('/crearCatalogo', async (req, res) => {
         //console.log("Respuesta del servidor: ");
         //console.log(respuesta);
 
-        // Convertir el string base64 a un buffer
-        const pdfBuffer = Buffer.from(respuesta.archivoPDF, 'base64');
+        const pdfBuffer = Buffer.from(respuesta.archivoPDF, 'base64'); // Converte el string base64 a un buffer
         
-        // Escribir el buffer en un archivo PDF
+        // Escribe el buffer en un archivo PDF
         fs.writeFile('catalogo.pdf', pdfBuffer, (error) => {
-            if (error) {
-                console.error('Error al escribir el archivo PDF:', error);
-            } else {
-                console.log('PDF creado exitosamente.');
-            }
+            if (error) console.error('Error al escribir el archivo PDF:', error);
+            else       console.log('PDF creado exitosamente.');
         });
+
+        res.send(respuesta);
+    }
+    catch(error){
+        res.status(500).send('Error al procesar la solicitud SOAP');
+    }
+
+});
+
+
+app.post('/cargarUsuarios', async (req, res) => {
+
+    try
+    {
+        console.log("*****************************************************************");
+        console.log("Solicitud del front-end recibida. Método llamado: cargarUsuarios");
+        console.log(req.body);
+        
+
+        //const archivoCSV = fs.readFileSync('./datosDePrueba.csv');        // Lee el archivo CSV de manera sincrónica
+        const archivoBase64 = Buffer.from(archivoCSV).toString('base64'); // Codifica el contenido del archivo a Base64
+
+        const respuesta = await usuarios(archivoBase64); 
 
         res.send(respuesta);
     }

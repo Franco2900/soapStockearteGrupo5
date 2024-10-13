@@ -13,7 +13,7 @@
             
             <xsd:complexType name="cargarUsuariosRequest">
                 <xsd:sequence>
-                    <xsd:element name="mensaje" type="xsd:string"/>
+                    <xsd:element name="archivoCSV" type="xsd:base64Binary"/>
                 </xsd:sequence>
             </xsd:complexType>
 
