@@ -1,24 +1,15 @@
 const soap = require('soap');
 const express = require('express');
-const bodyParser = require('body-parser');
-const bodyParserXml = require('body-parser-xml');
 
-
-bodyParserXml(bodyParser);
 const app = express();
 
-// Middleware para recibir el cuerpo de la solicitud como texto crudo (en este caso, XML)
-//app.use(express.raw({ type: '*/*' }));
+/******************************************* MIDDLEWARE ***************************************************/
 
-// Usar el middleware para parsear XML
-app.use(bodyParser.xml({
-    limit: '10MB', // Tamaño límite de los XML
-    xmlParseOptions: {
-        explicitArray: false // Solo si quieres un objeto en vez de arrays
-    }
-}));
+app.use(express.json());
+/********************************** FUNCIONES DEL CLIENTE SOAP *******************************************/
 
-async function crearClienteSoap(url) {
+async function crearClienteSoap(url) 
+{
     try {
         const clienteSoap = await soap.createClientAsync(url); // Crear cliente SOAP
         console.log('Cliente SOAP creado exitosamente');
@@ -29,39 +20,56 @@ async function crearClienteSoap(url) {
     }
 }
 
-async function catalogo(cliente, args) {
-    try {
-        const res = await cliente.crearCatalogoAsync(args);
-        return res;
-        }
-    catch (error) {
+
+var clienteSoap;
+
+(async function() {
+    clienteSoap = await crearClienteSoap('http://localhost:9000/crearCatalogo?wsdl'); // El cliente tiene que escuchar en la misma ruta que el servidor provee
+})();
+
+
+async function catalogo(args) 
+{
+    try 
+    {
+        const res = await clienteSoap.crearCatalogoAsync(args);
+        return res[0]; // Devuelve 3 cosas: los datos procesados, la respuesta del servidor en formato XML y la solicitud enviada por el cliente en formato XML
+    }
+    catch (error) 
+    {
         console.error('Error al hacer la solicitud SOAP:', error);
     }
 }
 
 
+/************************************** RUTAS ******************************************/
 
-// Ruta que recibe el XML y lo reenvía al servidor SOAP
 app.post('/crearCatalogo', async (req, res) => {
 
-    try{
-        console.log("recibido");
-        //const xmlData = req.body.toString();  // Convertimos el buffer recibido a string (XML)
-        //const XML = new DOMParser().parseFromString(xmlData, 'text/xml');
-        const xmlData = req.body;
-        //console.log(xmlData);
-        const cliente = await crearClienteSoap('http://localhost:7000/crearCatalogo?wsdl');
-        const respuesta = await catalogo(cliente,xmlData);
-        res.contentType('application/xml');
+    try
+    {
+        console.log("*****************************************************************");
+        console.log("Solicitud del front-end recibida. Método llamado: crearCatalogo");
+        console.log("Datos que llegan del front-end: " + req.body.codigos);
+        
+        const args = {
+            codigos: req.body.codigos 
+        };
+
+        const respuesta = await catalogo(args); 
+        console.log("Respuesta del servidor: ");
+        console.log(respuesta);
+
         res.send(respuesta);
-    }catch(error){
+    }
+    catch(error){
         res.status(500).send('Error al procesar la solicitud SOAP');
     }
 
 });
 
 
-// Iniciar el cliente en el puerto 3000
-app.listen(8000, () => {
-    console.log('Servidor ejecutándose en http://localhost:8000');
+// Iniciar el cliente en el puerto 7000
+app.listen(7000, () => {
+    console.log('Servidor ejecutándose en http://localhost:7000');
 });
