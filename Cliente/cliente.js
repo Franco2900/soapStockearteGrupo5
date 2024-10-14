@@ -16,7 +16,7 @@ async function crearClienteSoap(url)
 {
     try {
         const clienteSoap = await soap.createClientAsync(url); // Crear cliente SOAP
-        console.log('Cliente SOAP creado exitosamente');
+        //console.log('Cliente SOAP creado exitosamente');
         return clienteSoap; // Retornar el cliente para usarlo más tarde
     }
     catch (error) {
@@ -77,7 +77,7 @@ app.post('/crearCatalogo', async (req, res) => {
         // Escribe el buffer en un archivo PDF
         fs.writeFile('catalogo.pdf', pdfBuffer, (error) => {
             if (error) console.error('Error al escribir el archivo PDF:', error);
-            else       console.log('PDF creado exitosamente.');
+            else       console.log('PDF creado por el servidor recibido exitosamente.');
         });
 
         res.send(respuesta);
@@ -96,14 +96,16 @@ app.post('/cargarUsuarios', upload.single('archivoCSV'), async (req, res) => {
         console.log("*****************************************************************");
         console.log("Solicitud del front-end recibida. Método llamado: cargarUsuarios");
 
-        
-        console.log(req.file);  // Verifica que el archivo ha sido subido correctamente
+        console.log('Archivo subido por el front-end:');
+        console.log(req.file); 
         const archivoCSV = fs.readFileSync(req.file.path); // Lee el archivo subido
 
         //const archivoCSV = fs.readFileSync('./datosDePrueba.csv');        // Lee el archivo CSV de manera sincrónica
         const archivoBase64 = Buffer.from(archivoCSV).toString('base64'); // Codifica el contenido del archivo a Base64
 
         const respuesta = await usuarios(archivoBase64); 
+        console.log('Respuesta del servidor');
+        console.log(respuesta);
 
         fs.unlinkSync(req.file.path); // Elimina el archivo subido
 
