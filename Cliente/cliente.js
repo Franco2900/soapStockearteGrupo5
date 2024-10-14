@@ -1,12 +1,15 @@
-const soap = require('soap');
+const soap    = require('soap');
 const express = require('express');
-const fs = require('fs');
+const fs      = require('fs');
+const multer  = require('multer');
 
 const app = express();
 
 /******************************************* MIDDLEWARE ***************************************************/
-
 app.use(express.json());
+
+const upload = multer({ dest: 'uploads/' }); // Carpeta de destino para los archivos subidos
+
 /********************************** FUNCIONES DEL CLIENTE SOAP *******************************************/
 
 async function crearClienteSoap(url) 
@@ -86,19 +89,23 @@ app.post('/crearCatalogo', async (req, res) => {
 });
 
 
-app.post('/cargarUsuarios', async (req, res) => {
+app.post('/cargarUsuarios', upload.single('archivoCSV'), async (req, res) => {
 
     try
     {
         console.log("*****************************************************************");
         console.log("Solicitud del front-end recibida. Método llamado: cargarUsuarios");
-        console.log(req.body);
+
         
+        console.log(req.file);  // Verifica que el archivo ha sido subido correctamente
+        const archivoCSV = fs.readFileSync(req.file.path); // Lee el archivo subido
 
         //const archivoCSV = fs.readFileSync('./datosDePrueba.csv');        // Lee el archivo CSV de manera sincrónica
         const archivoBase64 = Buffer.from(archivoCSV).toString('base64'); // Codifica el contenido del archivo a Base64
 
         const respuesta = await usuarios(archivoBase64); 
+
+        fs.unlinkSync(req.file.path); // Elimina el archivo subido
 
         res.send(respuesta);
     }
