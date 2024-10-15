@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 06-10-2024 a las 23:58:26
+-- Tiempo de generación: 15-10-2024 a las 22:09:54
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -32,6 +32,29 @@ CREATE TABLE `despacho` (
   `id_orden_de_compra` int(11) NOT NULL,
   `fecha_de_envio` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `filtro`
+--
+
+CREATE TABLE `filtro` (
+  `usuario` varchar(50) NOT NULL,
+  `nombre` varchar(50) NOT NULL,
+  `producto_codigo` varchar(50) DEFAULT NULL,
+  `tienda_codigo` varchar(50) DEFAULT NULL,
+  `fecha_inicio` date DEFAULT NULL,
+  `fecha_final` date DEFAULT NULL,
+  `habilitado` tinyint(4) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `filtro`
+--
+
+INSERT INTO `filtro` (`usuario`, `nombre`, `producto_codigo`, `tienda_codigo`, `fecha_inicio`, `fecha_final`, `habilitado`) VALUES
+('Usuario_prueba', 'Nombre_prueba', 'Producto_prueba', 'Tienda_prueba', '2022-01-01', '2022-01-31', 1);
 
 -- --------------------------------------------------------
 
@@ -144,6 +167,12 @@ CREATE TABLE `usuario` (
 ALTER TABLE `despacho`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id_orden_de_compra` (`id_orden_de_compra`);
+
+--
+-- Indices de la tabla `filtro`
+--
+ALTER TABLE `filtro`
+  ADD PRIMARY KEY (`usuario`,`nombre`);
 
 --
 -- Indices de la tabla `item`

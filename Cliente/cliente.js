@@ -54,6 +54,21 @@ async function usuarios(args)
     }
 }
 
+
+async function filtro(args)
+{
+    try 
+    {
+        var clienteSoap = await crearClienteSoap('http://localhost:9000/crearFiltro?wsdl');
+        const res = await clienteSoap.crearFiltroAsync(args);
+        return res[0]; 
+    }
+    catch (error) 
+    {
+        console.error('Error al hacer la solicitud SOAP:', error);
+    }
+}
+
 /************************************** RUTAS ******************************************/
 
 app.post('/crearCatalogo', async (req, res) => {
@@ -108,6 +123,30 @@ app.post('/cargarUsuarios', upload.single('archivoCSV'), async (req, res) => {
         console.log(respuesta);
 
         fs.unlinkSync(req.file.path); // Elimina el archivo subido
+
+        res.send(respuesta);
+    }
+    catch(error){
+        res.status(500).send('Error al procesar la solicitud SOAP');
+    }
+
+});
+
+
+
+app.post('/crearFiltro', async (req, res) => {
+
+    try
+    {
+        console.log("*****************************************************************");
+        console.log("Solicitud del front-end recibida. Método llamado: crearFiltro");
+        console.log("Datos que llegan del front-end: ");
+        console.log(req.body);
+
+
+        const respuesta = await filtro(req.body); 
+        console.log("Respuesta del servidor: ");
+        console.log(respuesta);
 
         res.send(respuesta);
     }
