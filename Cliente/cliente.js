@@ -15,9 +15,15 @@ const upload = multer({ dest: 'uploads/' }); // Carpeta de destino para los arch
 async function crearClienteSoap(url) 
 {
     try {
-        const clienteSoap = await soap.createClientAsync(url); // Crear cliente SOAP
+        const clienteSoap = await soap.createClientAsync(url); // Crea cliente SOAP
+        
         //console.log('Cliente SOAP creado exitosamente');
-        return clienteSoap; // Retornar el cliente para usarlo más tarde
+        clienteSoap.on('message', (xml) => {
+            console.log('\nXML Enviado: ');
+            console.log(xml);
+        });
+
+        return clienteSoap; // Retorna el cliente para usarlo más tarde
     }
     catch (error) {
         console.error('Error al crear el cliente SOAP:', error);
@@ -25,53 +31,66 @@ async function crearClienteSoap(url)
 }
 
 
-async function catalogo(args) 
-{
-    try 
-    {
-        var clienteSoap = await crearClienteSoap('http://localhost:9000/crearCatalogo?wsdl'); // El cliente tiene que escuchar en la misma ruta que el servidor provee
-        const res = await clienteSoap.crearCatalogoAsync(args);
-        return res[0]; // Devuelve 3 cosas: los datos procesados, la respuesta del servidor en formato XML y la solicitud enviada por el cliente en formato XML
-    }
-    catch (error) 
-    {
-        console.error('Error al hacer la solicitud SOAP:', error);
-    }
-}
-
-
-async function usuarios(args) 
-{
-    try 
-    {
-        var clienteSoap = await crearClienteSoap('http://localhost:9000/cargarUsuarios?wsdl');
-        const res = await clienteSoap.cargarUsuariosAsync({ archivoCSV: args });
-        return res[0]; 
-    }
-    catch (error) 
-    {
-        console.error('Error al hacer la solicitud SOAP:', error);
-    }
-}
-
-
-async function filtro(args)
-{
-    try 
-    {
-        var clienteSoap = await crearClienteSoap('http://localhost:9000/crearFiltro?wsdl');
-        const res = await clienteSoap.crearFiltroAsync(args);
-        return res[0]; 
-    }
-    catch (error) 
-    {
-        console.error('Error al hacer la solicitud SOAP:', error);
-    }
-}
-
 /************************************** RUTAS ******************************************/
 
-app.post('/crearCatalogo', async (req, res) => {
+app.get('/filtro', async (req, res) => { 
+// Para un GET, el cliente envia la request de la siguiente forma:  /endpoint?parametro1=valor1&parametro2=valor2
+// Aunque puede recibir json crudo como los POST, no es una buena práctica mandar json crudo a un GET
+
+    try
+    {
+        console.log("*****************************************************************");
+        console.log("Solicitud del front-end recibida. Método llamado: consultarOrdenesDeCompra");
+        console.log("Datos que llegan del front-end: ");
+        console.log(req.query);
+
+        //var clienteSoap = await crearClienteSoap('http://localhost:9000/filtroService?wsdl');
+        //const respuestaServidor = await clienteSoap.consultarOrdenesDeCompra(req.body);
+        var respuesta = respuestaServidor[0]; 
+
+        // DEBUG
+        //console.log("Respuesta del servidor: ");
+        //console.log(respuesta);
+
+        res.send(respuesta);
+    }
+    catch
+    {
+        console.log(error);
+        res.status(500).send('Error al procesar la solicitud SOAP');
+    }
+
+});
+
+app.post('/filtro', async (req, res) => {
+
+    try
+    {
+        console.log("*****************************************************************");
+        console.log("Solicitud del front-end recibida. Método llamado: crearFiltro");
+        console.log("Datos que llegan del front-end: ");
+        console.log(req.body);
+
+        var clienteSoap = await crearClienteSoap('http://localhost:9000/filtroService?wsdl');
+        const respuestaServidor = await clienteSoap.crearFiltroAsync(req.body);
+        var respuesta = respuestaServidor[0]; 
+
+        // DEBUG
+        //console.log("Respuesta del servidor: ");
+        //console.log(respuesta);
+
+        res.send(respuesta);
+    }
+    catch(error)
+    {
+        console.log(error);
+        res.status(500).send('Error al procesar la solicitud SOAP');
+    }
+
+});
+
+
+app.post('/catalogo', async (req, res) => {
 
     try
     {
@@ -83,7 +102,11 @@ app.post('/crearCatalogo', async (req, res) => {
             codigos: req.body.codigos 
         };
 
-        const respuesta = await catalogo(args); 
+        var clienteSoap = await crearClienteSoap('http://localhost:9000/catalogoService?wsdl'); // El cliente tiene que escuchar en la misma ruta que el servidor provee
+        const respuestaServidor = await clienteSoap.crearCatalogoAsync(args);
+        var respuesta = respuestaServidor[0]; // Devuelve 3 cosas: los datos procesados, la respuesta del servidor en formato XML y la solicitud enviada por el cliente en formato XML
+
+        // DEBUG
         //console.log("Respuesta del servidor: ");
         //console.log(respuesta);
 
@@ -92,69 +115,56 @@ app.post('/crearCatalogo', async (req, res) => {
         // Escribe el buffer en un archivo PDF
         fs.writeFile('catalogo.pdf', pdfBuffer, (error) => {
             if (error) console.error('Error al escribir el archivo PDF:', error);
-            else       console.log('PDF creado por el servidor recibido exitosamente.');
+            else       console.log('PDF creado por el servidor recibido exitosamente');
         });
 
-        res.send(respuesta);
+        res.send('PDF creado por el servidor recibido exitosamente');
     }
-    catch(error){
+    catch(error)
+    {
+        console.log(error);
         res.status(500).send('Error al procesar la solicitud SOAP');
     }
 
 });
 
 
-app.post('/cargarUsuarios', upload.single('archivoCSV'), async (req, res) => {
+app.post('/usuario', upload.single('archivoCSV'), async (req, res) => {
 
-    try
-    {
+    try {
         console.log("*****************************************************************");
         console.log("Solicitud del front-end recibida. Método llamado: cargarUsuarios");
-
         console.log('Archivo subido por el front-end:');
-        console.log(req.file); 
-        const archivoCSV = fs.readFileSync(req.file.path); // Lee el archivo subido
+        console.log(req.file);
 
-        //const archivoCSV = fs.readFileSync('./datosDePrueba.csv');        // Lee el archivo CSV de manera sincrónica
-        const archivoBase64 = Buffer.from(archivoCSV).toString('base64'); // Codifica el contenido del archivo a Base64
+        // Verifica que el archivo existe
+        if (!req.file) {
+            return res.status(400).send('Archivo CSV no subido');
+        }
 
-        const respuesta = await usuarios(archivoBase64); 
-        console.log('Respuesta del servidor');
-        console.log(respuesta);
+        var archivo = fs.readFileSync(req.file.path); // Lee el archivo subido
+        var archivoBase64 = Buffer.from(archivo).toString('base64'); // Codifica el contenido del archivo a Base64
+        //console.log(archivoBase64); // DEBUG
+
+        var clienteSoap = await crearClienteSoap('http://localhost:9000/usuarioService?wsdl');
+        var respuestaServidor = await clienteSoap.cargarUsuariosAsync({ archivoCSV: archivoBase64 });
+        var respuesta = respuestaServidor[0];
+
+        // DEBUG
+        //console.log('Respuesta del servidor');
+        //console.log(respuesta);
 
         fs.unlinkSync(req.file.path); // Elimina el archivo subido
-
         res.send(respuesta);
-    }
-    catch(error){
-        res.status(500).send('Error al procesar la solicitud SOAP');
-    }
 
-});
-
-
-
-app.post('/crearFiltro', async (req, res) => {
-
-    try
+    } catch(error) 
     {
-        console.log("*****************************************************************");
-        console.log("Solicitud del front-end recibida. Método llamado: crearFiltro");
-        console.log("Datos que llegan del front-end: ");
-        console.log(req.body);
-
-
-        const respuesta = await filtro(req.body); 
-        console.log("Respuesta del servidor: ");
-        console.log(respuesta);
-
-        res.send(respuesta);
-    }
-    catch(error){
+        console.log(error);
         res.status(500).send('Error al procesar la solicitud SOAP');
     }
 
 });
+
 
 
 // Iniciar el cliente en el puerto 7000

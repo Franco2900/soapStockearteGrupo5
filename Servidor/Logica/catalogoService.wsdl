@@ -1,27 +1,27 @@
-<wsdl:definitions 
-    targetNamespace="http://localhost:9000/crearCatalogo"
+<wsdl:definitions targetNamespace="http://localhost:9000/catalogoService"
     xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
-    xmlns:tns="http://localhost:9000/crearCatalogo"
+    xmlns:tns="http://localhost:9000/catalogoService"
     xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  
+
     <wsdl:types>
-        <xsd:schema targetNamespace="http://localhost:9000/crearCatalogo">
+        <xsd:schema targetNamespace="http://localhost:9000/catalogoService">
+        
             <xsd:element name="crearCatalogoRequest" type="tns:crearCatalogoRequest"/>
             <xsd:element name="crearCatalogoResponse" type="tns:crearCatalogoResponse"/>
-            
+
             <xsd:complexType name="crearCatalogoRequest">
                 <xsd:sequence>
                     <xsd:element name="codigos" type="xsd:string" maxOccurs="unbounded"/>
                 </xsd:sequence>
             </xsd:complexType>
-            
+
             <xsd:complexType name="crearCatalogoResponse">
                 <xsd:sequence>
                     <xsd:element name="archivoPDF" type="xsd:base64Binary"/>
                 </xsd:sequence>
             </xsd:complexType>
-            
+
         </xsd:schema>
     </wsdl:types>
 
@@ -30,17 +30,17 @@
     </wsdl:message>
 
     <wsdl:message name="crearCatalogoResponseMessage">
-        <wsdl:part name="response" element="tns:crearCatalogoResponse"/> 
+        <wsdl:part name="response" element="tns:crearCatalogoResponse"/>
     </wsdl:message>
 
-    <wsdl:portType name="crearCatalogoPort">
+    <wsdl:portType name="catalogoServicePort">
         <wsdl:operation name="crearCatalogo">
             <wsdl:input message="tns:crearCatalogoRequestMessage"/>
             <wsdl:output message="tns:crearCatalogoResponseMessage"/>
         </wsdl:operation>
     </wsdl:portType>
 
-    <wsdl:binding name="crearCatalogoBinding" type="tns:crearCatalogoPort">
+    <wsdl:binding name="catalogoServiceBinding" type="tns:catalogoServicePort">
         <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
         <wsdl:operation name="crearCatalogo">
             <soap:operation soapAction="http://example.com/Greeter/Greet"/>
@@ -53,9 +53,10 @@
         </wsdl:operation>
     </wsdl:binding>
 
-    <wsdl:service name="crearCatalogoService">
-        <wsdl:port name="crearCatalogoPort" binding="tns:crearCatalogoBinding">
-            <soap:address location="http://localhost:9000/crearCatalogo"/>
+    <wsdl:service name="catalogoService">
+        <wsdl:port name="catalogoServicePort" binding="tns:catalogoServiceBinding">
+            <soap:address location="http://localhost:9000/catalogoService"/>
         </wsdl:port>
     </wsdl:service>
+
 </wsdl:definitions>

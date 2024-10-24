@@ -7,9 +7,9 @@ const PDFDocument = require('../node_modules/pdfkit'); // Módulo para trabajar 
 /********************** DEFINICIÓN DE SERVICIOS ***********************/
 
 // Defino el servicio
-const servicioCatalogo = {
-    crearCatalogoService: {
-        crearCatalogoPort: {
+const catalogoService = {
+    catalogoService: {
+        catalogoServicePort: {
             crearCatalogo: async function (args, callback) {
 
                 console.log("Datos enviados por la solicitud del cliente: ", args);
@@ -86,4 +86,4 @@ async function crearCatalogoPDF(codigosProductos) {
 };
 
 /*********************************** EXPORTACIÓN DE LA LÓGICA ***********************************/
-module.exports = { servicioCatalogo };
+module.exports = { catalogoService };

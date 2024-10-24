@@ -8,14 +8,18 @@ const csvParser = require('csv-parser');
 /********************** DEFINICIÓN DE SERVICIOS ***********************/
 
 // Defino el servicio
-const servicioCargarUsuarios = {
-    cargarUsuariosService: {
-        cargarUsuariosPort: {
+const usuarioService = {
+    usuarioService: {
+        usuarioServicePort: {
             cargarUsuarios: async function(args, callback) {
             
                 console.log('******************************************************************');
                 console.log("Datos enviados por la solicitud del cliente: ");
                 console.log(args);
+
+                // DEBUG
+                const archivoDecodificado = Buffer.from(args.archivoCSV, 'base64'); // Verificar este paso
+                fs.writeFileSync("./datosDeUsuarios.csv", archivoDecodificado); // Escribir archivo
 
                 // Defino la lógica del servicio
                 var observaciones = await cargarUsuarios(args.archivoCSV);
@@ -153,4 +157,4 @@ async function cargarUsuarios(args)
 }
 
 /*********************************** EXPORTACIÓN DE LA LÓGICA ***********************************/
-module.exports = { servicioCargarUsuarios };
+module.exports = { usuarioService };

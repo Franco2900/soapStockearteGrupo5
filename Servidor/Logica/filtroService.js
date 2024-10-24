@@ -5,9 +5,9 @@ const conexionDataBase = require('./conexionDataBase.js');
 
 
 // Defino el servicio
-const servicioCrearFiltro = {
-    crearFiltroService: {
-        crearFiltroPort: {
+const filtroService = {
+    filtroService: {
+        filtroServicePort: {
             crearFiltro: async function (args, callback) {
 
                 console.log('******************************************************************');
@@ -47,4 +47,4 @@ async function crearFiltro(args)
 }
 
 /*********************************** EXPORTACIÓN DE LA LÓGICA ***********************************/
-module.exports = { servicioCrearFiltro };
+module.exports = { filtroService };

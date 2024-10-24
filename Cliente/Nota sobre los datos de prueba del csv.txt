@@ -1,0 +1,5 @@
+El archivo .csv tiene los siguientes errores a proposito para testear la funcionalidad del servidor:
+
+En la linea 3 falta el codigo de la tienda
+La tienda de la linea 4 está deshabilitada
+El usuario Hackerman esta repetido en las lineas 5 y 6

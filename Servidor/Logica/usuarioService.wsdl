@@ -1,16 +1,11 @@
-<wsdl:definitions
-    targetNamespace="http://localhost:9000/cargarUsuarios"
-    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
-    xmlns:tns="http://localhost:9000/cargarUsuarios"
-    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
-    xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-
+<wsdl:definitions targetNamespace="http://localhost:9000/usuarioService" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://localhost:9000/usuarioService" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    
     <wsdl:types>
-        <xsd:schema targetNamespace="http://localhost:9000/cargarUsuarios">
+        <xsd:schema targetNamespace="http://localhost:9000/usuarioService">
 
             <xsd:element name="cargarUsuariosRequest" type="tns:cargarUsuariosRequest"/>
             <xsd:element name="cargarUsuariosResponse" type="tns:cargarUsuariosResponse"/>
-            
+
             <xsd:complexType name="cargarUsuariosRequest">
                 <xsd:sequence>
                     <xsd:element name="archivoCSV" type="xsd:base64Binary"/>
@@ -22,28 +17,29 @@
                     <xsd:element name="mensaje" type="xsd:string"/>
                 </xsd:sequence>
             </xsd:complexType>
-
+            
         </xsd:schema>
     </wsdl:types>
 
     <wsdl:message name="cargarUsuariosRequestMessage">
         <wsdl:part name="request" element="tns:cargarUsuariosRequest"/>
     </wsdl:message>
+
     <wsdl:message name="cargarUsuariosResponseMessage">
         <wsdl:part name="response" element="tns:cargarUsuariosResponse"/>
     </wsdl:message>
 
-    <wsdl:portType name="cargarUsuariosPort">
+    <wsdl:portType name="usuarioServicePort">
         <wsdl:operation name="cargarUsuarios">
             <wsdl:input message="tns:cargarUsuariosRequestMessage"/>
             <wsdl:output message="tns:cargarUsuariosResponseMessage"/>
         </wsdl:operation>
     </wsdl:portType>
 
-    <wsdl:binding name="cargarUsuariosBinding" type="tns:cargarUsuariosPort">
+    <wsdl:binding name="usuarioServiceBinding" type="tns:usuarioServicePort">
         <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
         <wsdl:operation name="cargarUsuarios">
-            <soap:operation soapAction="http://example.com/Greeter/Greet"/>
+            <soap:operation soapAction="cargarUsuarios"/>
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>
@@ -53,10 +49,11 @@
         </wsdl:operation>
     </wsdl:binding>
 
-    <wsdl:service name="cargarUsuariosService">
-        <wsdl:port name="cargarUsuariosPort" binding="tns:cargarUsuariosBinding">
-            <soap:address location="http://localhost:9000/cargarUsuarios"/>
+    <wsdl:service name="usuarioService">
+        <wsdl:port name="usuarioServicePort" binding="tns:usuarioServiceBinding">
+            <soap:address location="http://localhost:9000/usuarioService"/>
         </wsdl:port>
     </wsdl:service>
 
 </wsdl:definitions>
+
