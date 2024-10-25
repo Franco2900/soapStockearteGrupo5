@@ -5,7 +5,7 @@ const conexionDataBase = require('../Servidor/Logica/conexionDataBase.js');
 async function borradoDatosDePrueba()
 {
     console.log('Borrando datos');
-    var tablasABorrar = ['usuario', 'tienda_x_producto', 'producto', 'tienda', 'novedades', 'item', 'despacho', 'orden_de_compra'];
+    var tablasABorrar = ['usuario', 'tienda_x_producto', 'producto', 'tienda', 'novedades', 'item', 'despacho', 'orden_de_compra', 'filtro'];
 
     for (const tabla of tablasABorrar) {
         await conexionDataBase.query(`DELETE FROM ${tabla}`, {} );

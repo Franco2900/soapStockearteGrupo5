@@ -45,7 +45,7 @@ app.get('/filtro', async (req, res) => {
         console.log(req.query);
 
         var clienteSoap = await crearClienteSoap('http://localhost:9000/filtroService?wsdl');
-        const respuestaServidor = await clienteSoap.consultarOrdenesDeCompra(req.query);
+        var respuestaServidor = await clienteSoap.consultarOrdenesDeCompra(req.query);
         var respuesta = respuestaServidor[0]; 
 
         // DEBUG
@@ -62,6 +62,7 @@ app.get('/filtro', async (req, res) => {
 
 });
 
+
 app.post('/filtro', async (req, res) => {
 
     try
@@ -72,7 +73,68 @@ app.post('/filtro', async (req, res) => {
         console.log(req.body);
 
         var clienteSoap = await crearClienteSoap('http://localhost:9000/filtroService?wsdl');
-        const respuestaServidor = await clienteSoap.crearFiltroAsync(req.body);
+        var respuestaServidor = await clienteSoap.crearFiltroAsync(req.body);
+        var respuesta = respuestaServidor[0]; 
+
+        // DEBUG
+        //console.log("Respuesta del servidor: ");
+        //console.log(respuesta);
+
+        res.send(respuesta);
+    }
+    catch(error)
+    {
+        console.log(error);
+        res.status(500).send('Error al procesar la solicitud SOAP');
+    }
+
+});
+
+
+app.put('/filtro', async (req, res) => {
+
+    try
+    {
+        console.log("*****************************************************************");
+        console.log("Solicitud del front-end recibida. Método llamado: modificarFiltro");
+        console.log("Datos que llegan del front-end: ");
+        console.log(req.body);
+
+        var clienteSoap = await crearClienteSoap('http://localhost:9000/filtroService?wsdl');
+        var respuestaServidor = await clienteSoap.modificarFiltroAsync(req.body);
+        var respuesta = respuestaServidor[0]; 
+
+        // DEBUG
+        //console.log("Respuesta del servidor: ");
+        //console.log(respuesta);
+
+        res.send(respuesta);
+    }
+    catch(error)
+    {
+        console.log(error);
+        res.status(500).send('Error al procesar la solicitud SOAP');
+    }
+
+});
+
+
+app.delete('/filtro', async (req, res) => {
+
+    try
+    {
+        console.log("*****************************************************************");
+        console.log("Solicitud del front-end recibida. Método llamado: borrarFiltro");
+        console.log("Datos que llegan del front-end: ");
+        console.log(req.body);
+
+        var clienteSoap = await crearClienteSoap('http://localhost:9000/filtroService?wsdl');
+        var respuestaServidor = await clienteSoap.borrarFiltro(req.body);
+        
+
+        console.log(respuestaServidor); // DEBUG
+
+        
         var respuesta = respuestaServidor[0]; 
 
         // DEBUG
