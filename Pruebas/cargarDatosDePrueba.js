@@ -83,6 +83,20 @@ async function cargarProducto(registro)
     }
 }
 
+
+async function cargarOrdenDeCompra(registro)
+{
+    await conexionDataBase.query('INSERT INTO orden_de_compra SET ?', registro);
+    console.log('Se hizo el alta de la orden de compra');
+}
+
+
+async function cargarItem(registro)
+{
+    await conexionDataBase.query('INSERT INTO item SET ?', registro);
+    console.log('Se hizo el alta del item');
+}
+
 /************************** DATOS HARDCODEADOS PARA REALIZAR PRUEBAS ****************************/ 
 const fs = require('fs');  // Módulo para trabajar con archivos
 
@@ -132,6 +146,32 @@ async function cargaDatosDePrueba()
     for (const producto of productos) {
         await cargarProducto(producto);
     }
+
+
+    const ordenesDeCompra = [
+        { estado: 'ACEPTADA', observaciones: 'Sin observaciones', fecha_de_solicitud: '2023-09-01', fecha_de_recepcion: '2023-09-08', tienda_codigo: 'asdfgh987' },
+        { estado: 'ACEPTADA', observaciones: 'Sin observaciones', fecha_de_solicitud: '2024-10-02', fecha_de_recepcion: '2024-10-09', tienda_codigo: 'pqr789xyz' },
+        { estado: 'RECIBIDA', observaciones: 'Sin observaciones', fecha_de_solicitud: '2024-11-03', fecha_de_recepcion: '2024-11-10', tienda_codigo: 'wxyz123abc' },
+    ]
+
+    for (const ordenDeCompra of ordenesDeCompra) {
+        await cargarOrdenDeCompra(ordenDeCompra);
+    }
+
+    const items = [
+        { producto_codigo: 'CB123', talle: 'M', color: 'Rojo',  cantidad_solicitada: 3, id_orden_de_compra: 1},
+
+        { producto_codigo: 'PJ456', talle: 'L', color: 'Azul',  cantidad_solicitada: 2, id_orden_de_compra: 2},
+        { producto_codigo: 'RLOW2', talle: 'S', color: 'Verde', cantidad_solicitada: 6, id_orden_de_compra: 2},
+
+        { producto_codigo: 'CB123', talle: 'M', color: 'Rojo',  cantidad_solicitada: 5, id_orden_de_compra: 3},
+        { producto_codigo: 'RLOW2', talle: 'S', color: 'Verde', cantidad_solicitada: 4, id_orden_de_compra: 3},
+    ]
+
+    for (const item of items) {
+        await cargarItem(item);
+    }
+
 }
 
 cargaDatosDePrueba();

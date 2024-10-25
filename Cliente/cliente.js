@@ -44,17 +44,17 @@ app.get('/filtro', async (req, res) => {
         console.log("Datos que llegan del front-end: ");
         console.log(req.query);
 
-        //var clienteSoap = await crearClienteSoap('http://localhost:9000/filtroService?wsdl');
-        //const respuestaServidor = await clienteSoap.consultarOrdenesDeCompra(req.body);
+        var clienteSoap = await crearClienteSoap('http://localhost:9000/filtroService?wsdl');
+        const respuestaServidor = await clienteSoap.consultarOrdenesDeCompra(req.query);
         var respuesta = respuestaServidor[0]; 
 
         // DEBUG
-        //console.log("Respuesta del servidor: ");
-        //console.log(respuesta);
+        console.log("Respuesta del servidor: ");
+        console.log(respuesta);
 
         res.send(respuesta);
     }
-    catch
+    catch(error)
     {
         console.log(error);
         res.status(500).send('Error al procesar la solicitud SOAP');
@@ -96,14 +96,11 @@ app.post('/catalogo', async (req, res) => {
     {
         console.log("*****************************************************************");
         console.log("Solicitud del front-end recibida. Método llamado: crearCatalogo");
-        console.log("Datos que llegan del front-end: " + req.body.codigos);
-        
-        const args = {
-            codigos: req.body.codigos 
-        };
+        console.log("Datos que llegan del front-end: ");
+        console.log(req.body);
 
         var clienteSoap = await crearClienteSoap('http://localhost:9000/catalogoService?wsdl'); // El cliente tiene que escuchar en la misma ruta que el servidor provee
-        const respuestaServidor = await clienteSoap.crearCatalogoAsync(args);
+        const respuestaServidor = await clienteSoap.crearCatalogoAsync({ codigos: req.body.codigos });
         var respuesta = respuestaServidor[0]; // Devuelve 3 cosas: los datos procesados, la respuesta del servidor en formato XML y la solicitud enviada por el cliente en formato XML
 
         // DEBUG
@@ -113,7 +110,7 @@ app.post('/catalogo', async (req, res) => {
         const pdfBuffer = Buffer.from(respuesta.archivoPDF, 'base64'); // Converte el string base64 a un buffer
         
         // Escribe el buffer en un archivo PDF
-        fs.writeFile('catalogo.pdf', pdfBuffer, (error) => {
+        fs.writeFile(`${req.body.titulo}.pdf`, pdfBuffer, (error) => {
             if (error) console.error('Error al escribir el archivo PDF:', error);
             else       console.log('PDF creado por el servidor recibido exitosamente');
         });
