@@ -10,9 +10,14 @@ const PDFDocument = require('../node_modules/pdfkit'); // Módulo para trabajar 
 const catalogoService = {
     catalogoService: {
         catalogoServicePort: {
+
             crearCatalogo: async function (args, callback) {
 
-                console.log("Datos enviados por la solicitud del cliente: ", args);
+                console.log('******************************************************************');
+                console.log('Función llamada: crearCatalogo\n');
+
+                console.log("Datos que llegan del cliente: ");
+                console.log(args);
 
                 try {
                     // Crear el PDF en base64
@@ -23,16 +28,17 @@ const catalogoService = {
                         archivoPDF: base64Pdf
                     };
 
-                    callback(null, response);
-                    
-                } catch (error) {
+                    console.log('PDF creado');
+                    callback(null, response);   
+                } 
+                catch (error) 
+                {
                     console.error('Error al generar el PDF:', error);
-                    callback({
-                        faultCode: 500,
-                        faultString: 'Error al generar el catálogo PDF',
-                    });
+                    callback({faultCode: 500, faultString: 'Error al generar el catálogo PDF',});
                 }
+
             }
+
         }
     }
 };

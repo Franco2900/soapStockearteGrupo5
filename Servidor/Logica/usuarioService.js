@@ -14,7 +14,9 @@ const usuarioService = {
             cargarUsuarios: async function(args, callback) {
             
                 console.log('******************************************************************');
-                console.log("Datos enviados por la solicitud del cliente: ");
+                console.log('Función llamada: cargarUsuarios\n');
+
+                console.log("Datos que llegan del cliente: ");
                 console.log(args);
 
                 // DEBUG

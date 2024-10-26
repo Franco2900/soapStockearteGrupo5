@@ -10,53 +10,90 @@ const filtroService = {
         filtroServicePort: {
 
             consultarOrdenesDeCompra: async function (args, callback) {
-                console.log('******************************************************************');
-                console.log("Datos enviados por la solicitud del cliente: ");
-                console.log(args);
-
-                // Defino la lógica del servicio
-                var resultadosConsulta = await consultarOrdenesDeCompra(args);
                 
-                // Defino la respuesta del servidor
-                const response = {
-                    mensaje: resultadosConsulta,
-                };
-        
-                callback(null, response);
+                try
+                {
+                    console.log('******************************************************************');
+                    console.log('Función llamada: consultarOrdenesDeCompra\n');
+
+                    console.log("Datos que llegan del cliente: ");
+                    console.log(args);
+    
+                    // Defino la lógica del servicio
+                    var resultadosConsulta = await consultarOrdenesDeCompra(args);
+                    
+                    // Defino la respuesta del servidor
+                    const response = {
+                        mensaje: 'Consulta realizada',
+                    };
+            
+                    console.log('\nDatos devueltos al cliente');
+                    console.log(resultadosConsulta);
+
+                    callback(null, response);
+                }
+                catch(error)
+                {
+                    console.log(error);
+                    callback(error, null);
+                }
+                
             },
 
             crearFiltro: async function (args, callback) {
 
-                console.log('******************************************************************');
-                console.log("Datos enviados por la solicitud del cliente: ");
-                console.log(args);
+                try
+                {
+                    console.log('******************************************************************');
+                    console.log('Función llamada: crearFiltro\n');
 
-                // Defino la lógica del servicio
-                await crearFiltro(args);
+                    console.log("Datos que llegan del cliente: ");
+                    console.log(args);
+
+                    // Defino la lógica del servicio
+                    await crearFiltro(args);
+                    
+                    // Defino la respuesta del servidor
+                    const response = {
+                        mensaje: 'Filtro creado',
+                    };
+            
+                    callback(null, response);
+                }
+                catch(error)
+                {
+                    console.log(error);
+                    callback(error, null);
+                }
                 
-                // Defino la respuesta del servidor
-                const response = {
-                    mensaje: 'Filtro creado',
-                };
-        
-                callback(null, response);
             },
 
             modificarFiltro: async function (args, callback) {
 
-                console.log('******************************************************************');
-                console.log("Datos enviados por la solicitud del cliente: ");
-                console.log(args);
+                try
+                {
+                    console.log('******************************************************************');
+                    console.log('Función llamada: modificarFiltro\n');
 
-                // Defino la lógica del servicio
-                await modificarFiltro(args);
+                    console.log("Datos que llegan del cliente: ");
+                    console.log(args);
+    
+                    // Defino la lógica del servicio
+                    await modificarFiltro(args);
+                    
+                    // Defino la respuesta del servidor
+                    const response = {
+                        mensaje: 'Filtro modificado',
+                    };
+            
+                    callback(null, response);
+                }
+                catch(error)
+                {
+                    console.log(error);
+                    callback(error, null);
+                }
                 
-                // Defino la respuesta del servidor
-                const response = {
-                    mensaje: 'Filtro modificado',
-                };
-        
-                callback(null, response);
             },
 
             borrarFiltro: async function (args, callback) {
@@ -64,7 +101,9 @@ const filtroService = {
                 try
                 {
                     console.log('******************************************************************');
-                    console.log("Datos enviados por la solicitud del cliente: ");
+                    console.log('Función llamada: borrarFiltro\n');
+
+                    console.log("Datos que llegan del cliente: ");
                     console.log(args);
     
                     // Defino la lógica del servicio
@@ -111,7 +150,7 @@ async function consultarOrdenesDeCompra(args)
         var resultadosConsulta = await conexionDataBase.query(consultaSQL, {});            
         const datosLimpios = JSON.parse(JSON.stringify(resultadosConsulta) );
 
-        console.log(datosLimpios);
+        //console.log(datosLimpios); //DEBUG
         return datosLimpios;
     }
     catch(error)
@@ -136,7 +175,7 @@ async function crearFiltro(args)
             fecha_final = '${args.fecha_final}',
             estado = '${args.estado}' `, {});
 
-        console.log('Filtro creado');
+        console.log('\nFiltro creado');
 
         return;
     }
@@ -164,7 +203,7 @@ async function modificarFiltro(args)
             usuario = '${args.usuario}'
             AND nombre = '${args.nombre}' `, {});
 
-            console.log('Filtro modificado');
+            console.log('\nFiltro modificado');
 
         return;
     }
@@ -186,7 +225,7 @@ async function borrarFiltro(args)
             usuario = '${args.usuario}'
             AND nombre = '${args.nombre}' `, {});
 
-        console.log('Filtro borrado');
+        console.log('\nFiltro borrado');
 
         return;
     }

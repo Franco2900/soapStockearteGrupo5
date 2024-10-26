@@ -1,0 +1,5 @@
+summary: Breve descripción de la operación.
+description: Descripción detallada de la operación.
+consumes: Tipo de contenido que espera recibir en el cuerpo de la solicitud (en este caso, JSON).
+parameters: Parámetros esperados en el cuerpo de la solicitud
+responses: Posibles respuestas HTTP
