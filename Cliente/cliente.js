@@ -2,6 +2,7 @@ const soap    = require('soap');
 const express = require('express');
 const fs      = require('fs');
 const multer  = require('multer');
+const cors    = require('cors');
 
 const app = express();
 
@@ -9,6 +10,14 @@ const swaggerUi = require('swagger-ui-express'); // Modulo de interfaz de usuari
 const swaggerSpecifications = require('./swagger'); // Documentación de la API
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecifications) );
+
+app.use(cors({
+    origin: 'http://localhost:5173', // Permitir sólo este origen
+    methods: ['GET', 'POST'],        // Métodos permitidos, según tus necesidades
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    exposedHeaders: ['Content-Type', 'Accept']
+  }));
+  
 
 /******************************************* MIDDLEWARE ***************************************************/
 app.use(express.json());
