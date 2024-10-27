@@ -20,9 +20,22 @@
                 </xsd:sequence>
             </xsd:complexType>
             
+            <xsd:complexType name="ordenDeCompra">
+                <xsd:sequence>
+                    <xsd:element name="id" type="xsd:integer"/>
+                    <xsd:element name="estado" type="xsd:string"/>
+                    <xsd:element name="observaciones" type="xsd:string"/>
+                    <xsd:element name="fecha_de_solicitud" type="xsd:dateTime"/>
+                    <xsd:element name="fecha_de_recepcion" type="xsd:dateTime"/>
+                    <xsd:element name="tienda_codigo" type="xsd:string"/>
+                    <xsd:element name="producto_codigo" type="xsd:string"/>
+                    <xsd:element name="cantidad_solicitada" type="xsd:integer"/>
+                </xsd:sequence>
+            </xsd:complexType>
+
             <xsd:complexType name="consultarOrdenesDeCompraResponse">
                 <xsd:sequence>
-                    <xsd:element name="mensaje" type="xsd:string"/>
+                    <xsd:element name="ordenes" type="ordenDeCompra" minOccurs="0" maxOccurs="unbounded"/>
                 </xsd:sequence>
             </xsd:complexType>
 

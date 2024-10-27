@@ -298,7 +298,7 @@ app.put('/filtro', async (req, res) => {
  *                 description: Nombre del filtro.
  *     responses:
  *       200:
- *         description: Filtro modificado exitosamente.
+ *         description: Filtro eliminado exitosamente.
  *         content:
  *           application/json:
  *             schema:

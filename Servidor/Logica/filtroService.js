@@ -21,16 +21,10 @@ const filtroService = {
     
                     // Defino la lógica del servicio
                     var resultadosConsulta = await consultarOrdenesDeCompra(args);
-                    
-                    // Defino la respuesta del servidor
-                    const response = {
-                        mensaje: 'Consulta realizada',
-                    };
-            
                     console.log('\nDatos devueltos al cliente');
                     console.log(resultadosConsulta);
 
-                    callback(null, response);
+                    callback(null, {ordenes: resultadosConsulta});
                 }
                 catch(error)
                 {
