@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 15-10-2024 a las 22:09:54
+-- Tiempo de generación: 26-10-2024 a las 20:39:14
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -46,15 +46,8 @@ CREATE TABLE `filtro` (
   `tienda_codigo` varchar(50) DEFAULT NULL,
   `fecha_inicio` date DEFAULT NULL,
   `fecha_final` date DEFAULT NULL,
-  `habilitado` tinyint(4) DEFAULT NULL
+  `estado` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `filtro`
---
-
-INSERT INTO `filtro` (`usuario`, `nombre`, `producto_codigo`, `tienda_codigo`, `fecha_inicio`, `fecha_final`, `habilitado`) VALUES
-('Usuario_prueba', 'Nombre_prueba', 'Producto_prueba', 'Tienda_prueba', '2022-01-01', '2022-01-31', 1);
 
 -- --------------------------------------------------------
 
