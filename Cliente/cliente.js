@@ -9,6 +9,12 @@ const app = express();
 const swaggerUi = require('swagger-ui-express'); // Modulo de interfaz de usuario de Swagger
 const swaggerSpecifications = require('./swagger'); // Documentación de la API
 
+/******************************************* MIDDLEWARE ***************************************************/
+app.use(express.json());
+
+const upload = multer({ dest: 'uploads/' }); // Carpeta de destino para los archivos subidos
+
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecifications) );
 
 app.use(cors({
@@ -16,13 +22,7 @@ app.use(cors({
     methods: ['GET', 'POST'],        // Métodos permitidos, según tus necesidades
     allowedHeaders: ['Content-Type', 'Authorization'],
     exposedHeaders: ['Content-Type', 'Accept']
-  }));
-  
-
-/******************************************* MIDDLEWARE ***************************************************/
-app.use(express.json());
-
-const upload = multer({ dest: 'uploads/' }); // Carpeta de destino para los archivos subidos
+}));
 
 /********************************** FUNCIONES DEL CLIENTE SOAP *******************************************/
 
@@ -49,11 +49,11 @@ async function crearClienteSoap(url)
 
 /**
  * @swagger
- * /filtro:
+ * /orden:
  *   get:
  *     summary: Consulta las ordenes de compra
- *     description: Consulta las ordenes de compra con un filtro personalizado
- *     tags: [Filtros]
+ *     description: Consulta las ordenes de compra según los datos pasados
+ *     tags: [Ordenes]
  *     parameters:
  *       - in: query
  *         name: producto_codigo
@@ -86,7 +86,7 @@ async function crearClienteSoap(url)
  *       500:
  *         description: Error al procesar la solicitud SOAP
  */
-app.get('/filtro', async (req, res) => { 
+app.get('/orden', async (req, res) => { 
 // Para un GET, el cliente envia la request de la siguiente forma:  /endpoint?parametro1=valor1&parametro2=valor2
 // Aunque puede recibir json crudo como los POST, no es una buena práctica mandar json crudo a un GET
 
@@ -98,7 +98,7 @@ app.get('/filtro', async (req, res) => {
         console.log("Datos que llegan del front-end: ");
         console.log(req.query);
 
-        var clienteSoap = await crearClienteSoap('http://localhost:9000/filtroService?wsdl');
+        var clienteSoap = await crearClienteSoap('http://localhost:9000/ordenService?wsdl');
         var respuestaServidor = await clienteSoap.consultarOrdenesDeCompraAsync(req.query);
         var respuesta = respuestaServidor[0]; 
 
@@ -114,6 +114,57 @@ app.get('/filtro', async (req, res) => {
         res.status(500).send('Error al procesar la solicitud SOAP');
     }
 
+});
+
+
+/**
+ * @swagger
+ * /filtro:
+ *   get:
+ *     summary: Trae los filtros.
+ *     description: Trae todos los filtros que creo un usuario.
+ *     tags: [Filtros]
+ *     parameters:
+ *       - in: query
+ *         name: usuario
+ *         required: true
+ *         description: Nombre del usuario.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Datos consultados correctamente
+ *       500:
+ *         description: Error al procesar la solicitud SOAP
+ */
+app.get('/filtro', async (req, res) => { 
+// Para un GET, el cliente envia la request de la siguiente forma:  /endpoint?parametro1=valor1&parametro2=valor2
+// Aunque puede recibir json crudo como los POST, no es una buena práctica mandar json crudo a un GET
+    
+    try
+    {
+        console.log("*****************************************************************");
+        console.log("Solicitud del front-end recibida. Método llamado: traerFiltro\n");
+    
+        console.log("Datos que llegan del front-end: ");
+        console.log(req.query);
+    
+        var clienteSoap = await crearClienteSoap('http://localhost:9000/filtroService?wsdl');
+        var respuestaServidor = await clienteSoap.traerFiltroAsync(req.query);
+        var respuesta = respuestaServidor[0]; 
+    
+        // DEBUG
+        console.log("\nRespuesta del servidor: ");
+        console.log(respuesta);
+    
+        res.send(respuesta);
+    }
+    catch(error)
+    {
+        console.log(error);
+        res.status(500).send('Error al procesar la solicitud SOAP');
+    }
+    
 });
 
 

@@ -6,12 +6,20 @@
     
     <wsdl:types>
         <xsd:schema targetNamespace="http://localhost:9000/filtroService">
+
+            <xsd:element name="traerFiltroRequest" type="tns:traerFiltroRequest"/>
+            <xsd:element name="traerFiltroResponse" type="tns:traerFiltroResponse"/>
             
-            <xsd:element name="consultarOrdenesDeCompraRequest" type="tns:consultarOrdenesDeCompraRequest"/>
-            <xsd:element name="consultarOrdenesDeCompraResponse" type="tns:consultarOrdenesDeCompraResponse"/>
-            
-            <xsd:complexType name="consultarOrdenesDeCompraRequest">
+            <xsd:complexType name="traerFiltroRequest">
                 <xsd:sequence>
+                    <xsd:element name="usuario" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            
+            <xsd:complexType name="traerFiltro">
+                <xsd:sequence>
+                    <xsd:element name="usuario" type="xsd:string"/>
+                    <xsd:element name="nombre" type="xsd:string"/>
                     <xsd:element name="producto_codigo" type="xsd:string"/>
                     <xsd:element name="tienda_codigo" type="xsd:string"/>
                     <xsd:element name="fecha_inicio" type="xsd:string"/>
@@ -19,23 +27,10 @@
                     <xsd:element name="estado" type="xsd:string"/>
                 </xsd:sequence>
             </xsd:complexType>
-            
-            <xsd:complexType name="ordenDeCompra">
-                <xsd:sequence>
-                    <xsd:element name="id" type="xsd:integer"/>
-                    <xsd:element name="estado" type="xsd:string"/>
-                    <xsd:element name="observaciones" type="xsd:string"/>
-                    <xsd:element name="fecha_de_solicitud" type="xsd:dateTime"/>
-                    <xsd:element name="fecha_de_recepcion" type="xsd:dateTime"/>
-                    <xsd:element name="tienda_codigo" type="xsd:string"/>
-                    <xsd:element name="producto_codigo" type="xsd:string"/>
-                    <xsd:element name="cantidad_solicitada" type="xsd:integer"/>
-                </xsd:sequence>
-            </xsd:complexType>
 
-            <xsd:complexType name="consultarOrdenesDeCompraResponse">
+            <xsd:complexType name="traerFiltroResponse">
                 <xsd:sequence>
-                    <xsd:element name="ordenes" type="ordenDeCompra" minOccurs="0" maxOccurs="unbounded"/>
+                    <xsd:element name="filtros" type="tns:traerFiltro" minOccurs="0" maxOccurs="unbounded"/>
                 </xsd:sequence>
             </xsd:complexType>
 
@@ -104,12 +99,12 @@
     </wsdl:types>
     
 
-    <wsdl:message name="consultarOrdenesDeCompraRequestMessage">
-        <wsdl:part name="request" element="tns:consultarOrdenesDeCompraRequest"/>
+    <wsdl:message name="traerFiltroRequestMessage">
+        <wsdl:part name="request" element="tns:traerFiltroRequest"/>
     </wsdl:message>
     
-    <wsdl:message name="consultarOrdenesDeCompraResponseMessage">
-        <wsdl:part name="response" element="tns:consultarOrdenesDeCompraResponse"/>
+    <wsdl:message name="traerFiltroResponseMessage">
+        <wsdl:part name="response" element="tns:traerFiltroResponse"/>
     </wsdl:message>
 
     <wsdl:message name="crearFiltroRequestMessage">
@@ -139,9 +134,9 @@
 
     <wsdl:portType name="filtroServicePort">
 
-        <wsdl:operation name="consultarOrdenesDeCompra">
-            <wsdl:input message="tns:consultarOrdenesDeCompraRequestMessage"/>
-            <wsdl:output message="tns:consultarOrdenesDeCompraResponseMessage"/>
+        <wsdl:operation name="traerFiltro">
+            <wsdl:input message="tns:traerFiltroRequestMessage"/>
+            <wsdl:output message="tns:traerFiltroResponseMessage"/>
         </wsdl:operation>
 
         <wsdl:operation name="crearFiltro">
@@ -161,11 +156,12 @@
 
     </wsdl:portType>
     
+
     <wsdl:binding name="filtroServiceBinding" type="tns:filtroServicePort">
         <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
 
-        <wsdl:operation name="consultarOrdenesDeCompra">
-            <soap:operation soapAction="http://example.com/consultarOrdenesDeCompra"/>
+        <wsdl:operation name="traerFiltro">
+            <soap:operation soapAction="http://example.com/traerFiltro"/>
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>

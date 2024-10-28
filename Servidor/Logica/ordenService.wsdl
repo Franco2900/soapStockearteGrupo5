@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions 
+    targetNamespace="http://localhost:9000/ordenService"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:tns="http://localhost:9000/ordenService"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+    <wsdl:types>
+        <xsd:schema targetNamespace="http://localhost:9000/ordenService">
+            
+            <xsd:element name="consultarOrdenesDeCompraRequest" type="tns:consultarOrdenesDeCompraRequest"/>
+            <xsd:element name="consultarOrdenesDeCompraResponse" type="tns:consultarOrdenesDeCompraResponse"/>
+            
+            <xsd:complexType name="consultarOrdenesDeCompraRequest">
+                <xsd:sequence>
+                    <xsd:element name="producto_codigo" type="xsd:string"/>
+                    <xsd:element name="tienda_codigo" type="xsd:string"/>
+                    <xsd:element name="fecha_inicio" type="xsd:string"/>
+                    <xsd:element name="fecha_final" type="xsd:string"/>
+                    <xsd:element name="estado" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            
+            <xsd:complexType name="ordenDeCompra">
+                <xsd:sequence>
+                    <xsd:element name="id" type="xsd:integer"/>
+                    <xsd:element name="estado" type="xsd:string"/>
+                    <xsd:element name="observaciones" type="xsd:string"/>
+                    <xsd:element name="fecha_de_solicitud" type="xsd:dateTime"/>
+                    <xsd:element name="fecha_de_recepcion" type="xsd:dateTime"/>
+                    <xsd:element name="tienda_codigo" type="xsd:string"/>
+                    <xsd:element name="producto_codigo" type="xsd:string"/>
+                    <xsd:element name="cantidad_solicitada" type="xsd:integer"/>
+                </xsd:sequence>
+            </xsd:complexType>
+
+            <xsd:complexType name="consultarOrdenesDeCompraResponse">
+                <xsd:sequence>
+                    <xsd:element name="ordenes" type="tns:ordenDeCompra" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            
+        </xsd:schema>
+    </wsdl:types>
+    
+
+    <wsdl:message name="consultarOrdenesDeCompraRequestMessage">
+        <wsdl:part name="request" element="tns:consultarOrdenesDeCompraRequest"/>
+    </wsdl:message>
+    
+    <wsdl:message name="consultarOrdenesDeCompraResponseMessage">
+        <wsdl:part name="response" element="tns:consultarOrdenesDeCompraResponse"/>
+    </wsdl:message>
+
+
+    <wsdl:portType name="ordenServicePort">
+        <wsdl:operation name="consultarOrdenesDeCompra">
+            <wsdl:input message="tns:consultarOrdenesDeCompraRequestMessage"/>
+            <wsdl:output message="tns:consultarOrdenesDeCompraResponseMessage"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    
+    <wsdl:binding name="ordenServiceBinding" type="tns:ordenServicePort">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        
+        <wsdl:operation name="consultarOrdenesDeCompra">
+            <soap:operation soapAction="http://example.com/consultarOrdenesDeCompra"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    
+    <wsdl:service name="ordenService">
+        <wsdl:port name="ordenServicePort" binding="tns:ordenServiceBinding">
+            <soap:address location="http://localhost:9000/ordenService"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
