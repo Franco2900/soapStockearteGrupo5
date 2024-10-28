@@ -20,7 +20,8 @@ const options = {
 
   },
   
-  apis: ['./cliente.js'], // Rutas donde se encuentran los comentarios JSDoc
+  // Rutas donde se encuentran los comentarios JSDoc
+  apis: ['./Rutas/orden.js', './Rutas/filtro.js', './Rutas/catalogo.js', './Rutas/usuario.js'], 
 
 };
 
