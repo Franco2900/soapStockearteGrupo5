@@ -13,7 +13,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecifications) ); 
 
 app.use(cors({
     origin: 'http://localhost:5173', // Permitir sólo este origen
-    methods: ['GET', 'POST'],        // Métodos permitidos, según tus necesidades
+    methods: ['GET', 'POST', 'PUT','DELETE' ],        // Métodos permitidos, según tus necesidades
     allowedHeaders: ['Content-Type', 'Authorization'],
     exposedHeaders: ['Content-Type', 'Accept']
 }));
