@@ -13,6 +13,7 @@
             <xsd:complexType name="crearCatalogoRequest">
                 <xsd:sequence>
                     <xsd:element name="codigos" type="xsd:string" maxOccurs="unbounded"/>
+                    <xsd:element name="titulo"  type="xsd:string"/>
                 </xsd:sequence>
             </xsd:complexType>
 

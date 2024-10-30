@@ -22,7 +22,7 @@ const catalogoService = {
 
                 try {
                     // Crear el PDF en base64
-                    const base64Pdf = await crearCatalogoPDF(args.codigos);
+                    const base64Pdf = await crearCatalogoPDF(args);
 
                     // Definir la respuesta del servidor
                     const response = {
@@ -38,6 +38,35 @@ const catalogoService = {
                     callback({faultCode: 500, faultString: 'Error al generar el catálogo PDF',});
                 }
 
+            },
+            
+            //falta implementar
+            borrarCatalogo: async function (args, callback) {
+
+                try
+                {
+                    console.log('******************************************************************');
+                    console.log('Función llamada: borrarCatalogo\n');
+
+                    console.log("Datos que llegan del cliente: ");
+                    console.log(args);
+    
+                    // Defino la lógica del servicio
+                    await borrarCatalogo(args);
+                    
+                    // Defino la respuesta del servidor
+                    const response = {
+                        mensaje: 'Catalogo borrado',
+                    };
+    
+                    callback(null, response);
+                }
+                catch(error)
+                {
+                    console.log(error);
+                    callback(error, null);
+                }
+                
             }
 
         }
@@ -46,7 +75,11 @@ const catalogoService = {
 
 
 // Función para crear el PDF 
-async function crearCatalogoPDF(codigosProductos) {
+async function crearCatalogoPDF(args) {
+
+    const codigosProductos = args.codigos;
+    const titulo=args.titulo;
+
     return new Promise( async (resolve, reject) => {
         const pdf = new PDFDocument();
         let buffers = [];
@@ -87,14 +120,55 @@ async function crearCatalogoPDF(codigosProductos) {
             if (codigoProducto !== codigosProductos[codigosProductos.length - 1]) {
                 pdf.addPage();
             }
+
         } catch (error) {
             reject(error);
         }
     }
+        try{
 
+        await conexionDataBase.query(`INSERT INTO catalogo 
+        SET
+        titulo = '${titulo}'`, {});
+
+        for (const codigoProducto of codigosProductos){
+            await conexionDataBase.query(`INSERT INTO catalogo_x_producto
+            SET
+            titulo = '${titulo}',
+            producto_codigo='${codigoProducto}'`,{});
+        }
+
+        console.log('\nCatalogo creado');
+        }catch(error){
+            console.log(error);
+        }
         pdf.end(); // Finalizar el PDF
     });
 };
+
+/*
+async function borrarCatalogo(args)
+{
+
+    try
+    {
+        await conexionDataBase.query(`DELETE FROM catalogo 
+            WHERE 
+            usuario = '${args.usuario}'
+            AND nombre = '${args.nombre}' `, {});
+
+        console.log('\nFiltro borrado');
+
+        return;
+    }
+    catch(error)
+    {
+        console.log(error);
+    }
+
+}
+
+*/
 
 /*********************************** EXPORTACIÓN DE LA LÓGICA ***********************************/
 module.exports = { catalogoService };
