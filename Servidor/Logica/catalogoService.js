@@ -40,7 +40,6 @@ const catalogoService = {
 
             },
             
-            //falta implementar
             borrarCatalogo: async function (args, callback) {
 
                 try
@@ -146,18 +145,21 @@ async function crearCatalogoPDF(args) {
     });
 };
 
-/*
+
 async function borrarCatalogo(args)
 {
 
     try
-    {
-        await conexionDataBase.query(`DELETE FROM catalogo 
+    {        
+        await conexionDataBase.query(`DELETE FROM catalogo_x_producto
             WHERE 
-            usuario = '${args.usuario}'
-            AND nombre = '${args.nombre}' `, {});
+            titulo = '${args.titulo}'`, {});
 
-        console.log('\nFiltro borrado');
+        await conexionDataBase.query(`DELETE FROM catalogo 
+        WHERE 
+        titulo = '${args.titulo}'`, {});
+
+        console.log('\nCatalogo borrado');
 
         return;
     }
@@ -168,7 +170,7 @@ async function borrarCatalogo(args)
 
 }
 
-*/
+
 
 /*********************************** EXPORTACIÓN DE LA LÓGICA ***********************************/
 module.exports = { catalogoService };
