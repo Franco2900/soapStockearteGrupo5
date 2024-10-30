@@ -1,5 +1,6 @@
 /************************************ CONFIGURACIÓN DE LA BASE DE DATOS **********************************/
 const conexionDataBase = require('./conexionDataBase.js');
+const sharp = require('sharp');
 
 /************************************ MÓDULOS USADOS  **********************************/
 const PDFDocument = require('../node_modules/pdfkit'); // Módulo para trabajar con PDFs
@@ -44,7 +45,7 @@ const catalogoService = {
 };
 
 
-// Función para crear el PDF en base64
+// Función para crear el PDF 
 async function crearCatalogoPDF(codigosProductos) {
     return new Promise( async (resolve, reject) => {
         const pdf = new PDFDocument();
@@ -74,9 +75,13 @@ async function crearCatalogoPDF(codigosProductos) {
             pdf.font('Helvetica').text(`Codigo: ${resultadosConsulta[0].codigo}`);
             pdf.text(`Talle: ${resultadosConsulta[0].talle}`);
             pdf.text(`Color: ${resultadosConsulta[0].color}`);
-            
-            let bufferImagen = Buffer.from(resultadosConsulta[0].foto.toString(), 'base64');
-            pdf.image(bufferImagen, (anchoPagina / 2) - 150, (altoPagina / 2) - 150, { width: 300, height: 300 });
+
+            const imageBuffer = await sharp(resultadosConsulta[0].foto)
+            .png()
+            .resize(300, 300)
+            .toBuffer();
+
+            pdf.image(imageBuffer, (anchoPagina / 2) - 150, (altoPagina / 2) - 150, { width: 300, height: 300 });
             pdf.rect((anchoPagina / 2) - 150, (altoPagina / 2) - 150, 300, 300).stroke();
             
             if (codigoProducto !== codigosProductos[codigosProductos.length - 1]) {
