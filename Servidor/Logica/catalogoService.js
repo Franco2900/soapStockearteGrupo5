@@ -107,7 +107,8 @@ const catalogoService = {
                     var resultadosConsulta = await traerCatalogos(args);
                     console.log('\nDatos devueltos al cliente');
                     console.log(resultadosConsulta);
-            
+                    //console.log(JSON.stringify(resultadosConsulta, null, 2));
+
                     callback(null, { catalogos: resultadosConsulta });
                 }
                 catch(error)
@@ -175,7 +176,7 @@ async function crearCatalogoPDF(args) {
             reject(error);
         }
     }
-    /*
+    
         try{
 
         await conexionDataBase.query(`INSERT INTO catalogo 
@@ -194,7 +195,7 @@ async function crearCatalogoPDF(args) {
         }catch(error){
             console.log(error);
         }
-    */
+    
         pdf.end(); // Finalizar el PDF
     });
 };
@@ -272,7 +273,26 @@ async function traerCatalogos(args)
             resultadosConsulta[i].foto = resultadosConsulta[i].foto.toString('base64'); 
         };
         
-        const datosLimpios = JSON.parse(JSON.stringify(resultadosConsulta) );
+        // Agrupamos los productos por título, donde cada uno tiene un arreglo de productos
+        resultadosConsulta = Object.values(resultadosConsulta.reduce((acc, row) => {
+            // Verificamos si el titulo es distinto al anterior
+            if (!acc[row.titulo]) {
+                acc[row.titulo] = { titulo: row.titulo, productos: [] };
+            }
+
+            // Agrega el producto a la lista de productos para ese título
+            acc[row.titulo].productos.push({
+                producto_codigo: row.producto_codigo,
+                nombre: row.nombre,
+                talle: row.talle,
+                foto: row.foto,
+                color: row.color
+            });
+
+            return acc;
+        }, {}));
+  
+        const datosLimpios = JSON.parse(JSON.stringify(resultadosConsulta));
 
         return datosLimpios;
     }

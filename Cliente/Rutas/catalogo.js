@@ -62,7 +62,8 @@ router.get('/', async (req, res) => {
             // DEBUG
             console.log("\nRespuesta del servidor: ");
             console.log(respuesta);
-        
+            //console.log(JSON.stringify(respuesta, null, 2));
+
             res.send(respuesta);
         }
         catch(error)

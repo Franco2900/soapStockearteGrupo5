@@ -56,15 +56,22 @@
                 </xsd:sequence>
             </xsd:complexType>
 
-            <!-- Define el tipo catalogo para los elementos en traerCatalogosResponse -->
-            <xsd:complexType name="catalogo">
+            <!-- Define el tipo producto para los elementos dentro de un catalogo -->
+            <xsd:complexType name="producto">
                 <xsd:sequence>
-                    <xsd:element name="titulo" type="xsd:string"/>
                     <xsd:element name="producto_codigo" type="xsd:string"/>
                     <xsd:element name="nombre" type="xsd:string"/>
                     <xsd:element name="talle" type="xsd:string"/>
-                    <xsd:element name="foto"  type="xsd:base64Binary"/>
+                    <xsd:element name="foto" type="xsd:base64Binary"/>
                     <xsd:element name="color" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+
+            <!-- Define el tipo catalogo para agrupar productos bajo un titulo -->
+            <xsd:complexType name="catalogo">
+                <xsd:sequence>
+                    <xsd:element name="titulo" type="xsd:string"/>
+                    <xsd:element name="productos" type="tns:producto" minOccurs="0" maxOccurs="unbounded"/>
                 </xsd:sequence>
             </xsd:complexType>
 
