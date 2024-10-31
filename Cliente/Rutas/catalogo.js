@@ -93,6 +93,71 @@ router.post('/', async (req, res) => {
 
 });
 
+/**
+ * @swagger
+ * /catalogo:
+ *   put:
+ *     summary: Modifica un catalogo.
+ *     description: Modifica un catalogo ya existente en el sistema.
+ *     tags: [Catálogos]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: ["codigos", "titulo"]
+ *             properties:
+ *               codigos:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 description: Lista de códigos para el catálogo.
+ *               titulo:
+ *                 type: string
+ *                 description: Título del catálogo.
+ *     responses:
+ *       200:
+ *         description: Catálogo modificado exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 mensaje:
+ *                   type: string
+ *                   description: Catálogo modificado exitosamente.
+ *       500:
+ *         description: Error al procesar la solicitud SOAP.
+ */
+router.put('/', async (req, res) => {
+
+    try
+    {
+        console.log("*****************************************************************");
+        console.log("Solicitud del front-end recibida. Método llamado: modificarCatalogo\n");
+
+        console.log("Datos que llegan del front-end: ");
+        console.log(req.body);
+
+        var clienteSoap = await crearClienteSoap('http://localhost:9000/catalogoService?wsdl');
+        var respuestaServidor = await clienteSoap.modificarCatalogoAsync(req.body);
+        var respuesta = respuestaServidor[0]; 
+
+        // DEBUG
+        console.log("\nRespuesta del servidor: ");
+        console.log(respuesta);
+
+        res.send(respuesta);
+    }
+    catch(error)
+    {
+        console.log(error);
+        res.status(500).send('Error al procesar la solicitud SOAP');
+    }
+
+});
+
 
 
 
@@ -155,5 +220,8 @@ router.delete('/', async (req, res) => {
 
 
 });
+
+
+
 
 module.exports = router;

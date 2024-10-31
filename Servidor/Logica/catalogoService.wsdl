@@ -11,6 +11,8 @@
             <xsd:element name="crearCatalogoResponse" type="tns:crearCatalogoResponse"/>
             <xsd:element name="borrarCatalogoRequest" type="tns:borrarCatalogoRequest"/>
             <xsd:element name="borrarCatalogoResponse" type="tns:borrarCatalogoResponse"/>
+            <xsd:element name="modificarCatalogoRequest" type="tns:modificarCatalogoRequest"/>
+            <xsd:element name="modificarCatalogoResponse" type="tns:modificarCatalogoResponse"/>
 
             <xsd:complexType name="crearCatalogoRequest">
                 <xsd:sequence>
@@ -37,6 +39,19 @@
                 </xsd:sequence>
             </xsd:complexType>
 
+            <xsd:complexType name="modificarCatalogoRequest">
+                <xsd:sequence>
+                    <xsd:element name="codigos" type="xsd:string" maxOccurs="unbounded"/>
+                    <xsd:element name="titulo" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+
+            <xsd:complexType name="modificarCatalogoResponse">
+                <xsd:sequence>
+                    <xsd:element name="mensaje" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+
         </xsd:schema>
     </wsdl:types>
 
@@ -56,6 +71,14 @@
         <wsdl:part name="response" element="tns:borrarCatalogoResponse"/>
     </wsdl:message>
 
+    <wsdl:message name="modificarCatalogoRequestMessage">
+        <wsdl:part name="request" element="tns:modificarCatalogoRequest"/>
+    </wsdl:message>
+
+    <wsdl:message name="modificarCatalogoResponseMessage">
+        <wsdl:part name="response" element="tns:modificarCatalogoResponse"/>
+    </wsdl:message>
+
     <wsdl:portType name="catalogoServicePort">
         <wsdl:operation name="crearCatalogo">
             <wsdl:input message="tns:crearCatalogoRequestMessage"/>
@@ -64,6 +87,10 @@
         <wsdl:operation name="borrarCatalogo">
             <wsdl:input message="tns:borrarCatalogoRequestMessage"/>
             <wsdl:output message="tns:borrarCatalogoResponseMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="modificarCatalogo">
+            <wsdl:input message="tns:modificarCatalogoRequestMessage"/>
+            <wsdl:output message="tns:modificarCatalogoResponseMessage"/>
         </wsdl:operation>
     </wsdl:portType>
 
@@ -80,6 +107,15 @@
         </wsdl:operation>
         <wsdl:operation name="borrarCatalogo">
             <soap:operation soapAction="http://example.com/Catalogo/Borrar"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="modificarCatalogo">
+            <soap:operation soapAction="http://example.com/Catalogo/Modificar"/>
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>

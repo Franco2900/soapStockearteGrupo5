@@ -39,7 +39,33 @@ const catalogoService = {
                 }
 
             },
+            modificarCatalogo: async function (args, callback) {
+
+                try
+                {
+                    console.log('******************************************************************');
+                    console.log('Función llamada: modificarCatalogo\n');
+
+                    console.log("Datos que llegan del cliente: ");
+                    console.log(args);
+    
+                    // Defino la lógica del servicio
+                    await modificarCatalogo(args);
+                    
+                    // Defino la respuesta del servidor
+                    const response = {
+                        mensaje: 'Catalogo modificado',
+                    };
             
+                    callback(null, response);
+                }
+                catch(error)
+                {
+                    console.log(error);
+                    callback(error, null);
+                }
+                
+            },
             borrarCatalogo: async function (args, callback) {
 
                 try
@@ -146,6 +172,50 @@ async function crearCatalogoPDF(args) {
 };
 
 
+
+async function modificarCatalogo(args)
+{   
+    const titulo = args.titulo;
+    const codigosProductos = args.codigos;
+
+    try
+    {
+        /*
+        for (const codigoProducto of codigosProductos){
+
+            await conexionDataBase.query(`UPDATE catalogo_x_producto 
+                SET
+                producto_codigo = '${codigoProducto}'
+                WHERE 
+                titulo = '${titulo}'`, {});
+        };
+        */
+        await conexionDataBase.query(`DELETE FROM catalogo_x_producto
+        WHERE 
+        titulo = '${titulo}'`, {});
+
+        for (const codigoProducto of codigosProductos){
+            await conexionDataBase.query(`INSERT INTO catalogo_x_producto
+            SET
+            titulo = '${titulo}',
+            producto_codigo='${codigoProducto}'`,{});
+        }
+
+
+        console.log('\nCatalogo modificado');
+
+        return;
+    }
+    catch(error)
+    {
+        console.log(error);
+    }
+
+}
+
+
+
+
 async function borrarCatalogo(args)
 {
 
@@ -168,7 +238,7 @@ async function borrarCatalogo(args)
         console.log(error);
     }
 
-}
+};
 
 
 
