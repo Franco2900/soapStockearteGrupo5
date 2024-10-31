@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 30-10-2024 a las 23:53:36
+-- Tiempo de generación: 31-10-2024 a las 03:20:14
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -28,7 +28,8 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `catalogo` (
-  `titulo` varchar(50) NOT NULL
+  `titulo` varchar(50) NOT NULL,
+  `tienda_codigo` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -315,7 +316,8 @@ INSERT INTO `usuario` (`id`, `usuario`, `password`, `nombre`, `apellido`, `habil
 -- Indices de la tabla `catalogo`
 --
 ALTER TABLE `catalogo`
-  ADD PRIMARY KEY (`titulo`);
+  ADD PRIMARY KEY (`titulo`),
+  ADD KEY `tienda_codigo` (`tienda_codigo`);
 
 --
 -- Indices de la tabla `catalogo_x_producto`
@@ -416,6 +418,12 @@ ALTER TABLE `usuario`
 --
 -- Restricciones para tablas volcadas
 --
+
+--
+-- Filtros para la tabla `catalogo`
+--
+ALTER TABLE `catalogo`
+  ADD CONSTRAINT `catalogo_ibfk_1` FOREIGN KEY (`tienda_codigo`) REFERENCES `tienda` (`codigo`) ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `catalogo_x_producto`
