@@ -92,6 +92,30 @@ const catalogoService = {
                     callback(error, null);
                 }
                 
+            },
+            traerCatalogos: async function (args, callback) {
+            
+                try
+                {
+                    console.log('******************************************************************');
+                    console.log('Función llamada: traerCatalogos\n');
+
+                    console.log("Datos que llegan del cliente: ");
+                    console.log(args);
+
+                    // Defino la lógica del servicio
+                    var resultadosConsulta = await traerCatalogos(args);
+                    console.log('\nDatos devueltos al cliente');
+                    console.log(resultadosConsulta);
+            
+                    callback(null, { catalogos: resultadosConsulta });
+                }
+                catch(error)
+                {
+                    console.log(error);
+                    callback(error, null);
+                }
+            
             }
 
         }
@@ -104,6 +128,7 @@ async function crearCatalogoPDF(args) {
 
     const codigosProductos = args.codigos;
     const titulo=args.titulo;
+    const codigoTienda = args.tienda_codigo;
 
     return new Promise( async (resolve, reject) => {
         const pdf = new PDFDocument();
@@ -154,7 +179,8 @@ async function crearCatalogoPDF(args) {
 
         await conexionDataBase.query(`INSERT INTO catalogo 
         SET
-        titulo = '${titulo}'`, {});
+        titulo = '${titulo}',
+        tienda_codigo = '${codigoTienda}' `, {});
 
         for (const codigoProducto of codigosProductos){
             await conexionDataBase.query(`INSERT INTO catalogo_x_producto
@@ -240,6 +266,29 @@ async function borrarCatalogo(args)
 
 };
 
+
+async function traerCatalogos(args)
+{
+    try
+    {
+        var resultadosConsulta = await conexionDataBase.query(`SELECT cxp.*,p.nombre,p.talle,p.foto,p.color FROM catalogo c
+        INNER JOIN catalogo_x_producto cxp on c.titulo = cxp.titulo
+        INNER JOIN producto p on p.codigo = cxp.producto_codigo
+        WHERE c.tienda_codigo = '${args.tienda_codigo}' `, {});
+        
+        for(var i=0; i< resultadosConsulta.length; i++){
+            resultadosConsulta[i].foto = resultadosConsulta[i].foto.toString('base64'); 
+        };
+        
+        const datosLimpios = JSON.parse(JSON.stringify(resultadosConsulta) );
+
+        return datosLimpios;
+    }
+    catch(error)
+    {
+        console.log(error);
+    }
+}
 
 
 /*********************************** EXPORTACIÓN DE LA LÓGICA ***********************************/

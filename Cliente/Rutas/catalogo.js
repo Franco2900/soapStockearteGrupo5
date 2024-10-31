@@ -26,6 +26,57 @@ async function crearClienteSoap(url)
 /**
  * @swagger
  * /catalogo:
+ *   get:
+ *     summary: Trae los catalogos.
+ *     description: Trae todos los catalogos de la tienda.
+ *     tags: [Catálogos]
+ *     parameters:
+ *       - in: query
+ *         name: tienda_codigo
+ *         required: true
+ *         description: Codigo de la tienda.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Datos consultados correctamente
+ *       500:
+ *         description: Error al procesar la solicitud SOAP
+ */
+router.get('/', async (req, res) => { 
+    // Para un GET, el cliente envia la request de la siguiente forma:  /endpoint?parametro1=valor1&parametro2=valor2
+    // Aunque puede recibir json crudo como los POST, no es una buena práctica mandar json crudo a un GET
+        
+        try
+        {
+            console.log("*****************************************************************");
+            console.log("Solicitud del front-end recibida. Método llamado: traerCatalogos\n");
+        
+            console.log("Datos que llegan del front-end: ");
+            console.log(req.query);
+        
+            var clienteSoap = await crearClienteSoap('http://localhost:9000/catalogoService?wsdl');
+            var respuestaServidor = await clienteSoap.traerCatalogosAsync(req.query);
+            var respuesta = respuestaServidor[0]; 
+        
+            // DEBUG
+            console.log("\nRespuesta del servidor: ");
+            console.log(respuesta);
+        
+            res.send(respuesta);
+        }
+        catch(error)
+        {
+            console.log(error);
+            res.status(500).send('Error al procesar la solicitud SOAP');
+        }
+        
+});
+
+
+/**
+ * @swagger
+ * /catalogo:
  *   post:
  *     summary: Crea un catálogo.
  *     description: Crea un catálogo en el sistema y devuelve un archivo PDF.
@@ -36,7 +87,7 @@ async function crearClienteSoap(url)
  *         application/json:
  *           schema:
  *             type: object
- *             required: ["codigos", "titulo"]
+ *             required: ["codigos", "titulo", "tienda_codigo"]
  *             properties:
  *               codigos:
  *                 type: array
@@ -46,6 +97,9 @@ async function crearClienteSoap(url)
  *               titulo:
  *                 type: string
  *                 description: Título del catálogo.
+ *               tienda_codigo:
+ *                 type: string
+ *                 description: Tienda del usuario.
  *     responses:
  *       200:
  *         description: Catálogo creado exitosamente.
@@ -68,7 +122,7 @@ router.post('/', async (req, res) => {
         console.log(req.body);
 
         var clienteSoap = await crearClienteSoap('http://localhost:9000/catalogoService?wsdl'); // El cliente tiene que escuchar en la misma ruta que el servidor provee
-        const respuestaServidor = await clienteSoap.crearCatalogoAsync({ codigos: req.body.codigos,titulo:req.body.titulo});
+        const respuestaServidor = await clienteSoap.crearCatalogoAsync({ codigos: req.body.codigos, titulo:req.body.titulo, tienda_codigo:req.body.tienda_codigo});
         var respuesta = respuestaServidor[0]; // Devuelve 3 cosas: los datos procesados, la respuesta del servidor en formato XML y la solicitud enviada por el cliente en formato XML
 
         // DEBUG
@@ -97,8 +151,8 @@ router.post('/', async (req, res) => {
  * @swagger
  * /catalogo:
  *   put:
- *     summary: Modifica un catalogo.
- *     description: Modifica un catalogo ya existente en el sistema.
+ *     summary: Modifica un catálogo.
+ *     description: Modifica un catálogo ya existente en el sistema.
  *     tags: [Catálogos]
  *     requestBody:
  *       required: true
@@ -116,6 +170,14 @@ router.post('/', async (req, res) => {
  *               titulo:
  *                 type: string
  *                 description: Título del catálogo.
+ *           example:
+ *             {
+ *               "codigos": [
+ *                 "P008",
+ *                 "P009"
+ *               ],
+ *               "titulo": "Prueba"
+ *             }
  *     responses:
  *       200:
  *         description: Catálogo modificado exitosamente.
@@ -127,6 +189,10 @@ router.post('/', async (req, res) => {
  *                 mensaje:
  *                   type: string
  *                   description: Catálogo modificado exitosamente.
+ *             example:
+ *               {
+ *                 "mensaje": "Catálogo modificado exitosamente."
+ *               }
  *       500:
  *         description: Error al procesar la solicitud SOAP.
  */
@@ -220,8 +286,5 @@ router.delete('/', async (req, res) => {
 
 
 });
-
-
-
 
 module.exports = router;

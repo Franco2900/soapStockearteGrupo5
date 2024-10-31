@@ -13,11 +13,15 @@
             <xsd:element name="borrarCatalogoResponse" type="tns:borrarCatalogoResponse"/>
             <xsd:element name="modificarCatalogoRequest" type="tns:modificarCatalogoRequest"/>
             <xsd:element name="modificarCatalogoResponse" type="tns:modificarCatalogoResponse"/>
+            <xsd:element name="traerCatalogosRequest" type="tns:traerCatalogosRequest"/>
+            <xsd:element name="traerCatalogosResponse" type="tns:traerCatalogosResponse"/>
 
             <xsd:complexType name="crearCatalogoRequest">
                 <xsd:sequence>
                     <xsd:element name="codigos" type="xsd:string" maxOccurs="unbounded"/>
                     <xsd:element name="titulo" type="xsd:string"/>
+                    <xsd:element name="tienda_codigo" type="xsd:string"/>
+
                 </xsd:sequence>
             </xsd:complexType>
 
@@ -52,6 +56,31 @@
                 </xsd:sequence>
             </xsd:complexType>
 
+            <!-- Define el tipo catalogo para los elementos en traerCatalogosResponse -->
+            <xsd:complexType name="catalogo">
+                <xsd:sequence>
+                    <xsd:element name="titulo" type="xsd:string"/>
+                    <xsd:element name="producto_codigo" type="xsd:string"/>
+                    <xsd:element name="nombre" type="xsd:string"/>
+                    <xsd:element name="talle" type="xsd:string"/>
+                    <xsd:element name="foto"  type="xsd:base64Binary"/>
+                    <xsd:element name="color" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+
+            <!-- Define traerCatalogosRequest y traerCatalogosResponse -->
+            <xsd:complexType name="traerCatalogosRequest">
+                <xsd:sequence>
+                    <xsd:element name="tienda_codigo" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+
+            <xsd:complexType name="traerCatalogosResponse">
+                <xsd:sequence>
+                    <xsd:element name="catalogos" type="tns:catalogo" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:complexType>
+
         </xsd:schema>
     </wsdl:types>
 
@@ -79,6 +108,14 @@
         <wsdl:part name="response" element="tns:modificarCatalogoResponse"/>
     </wsdl:message>
 
+    <wsdl:message name="traerCatalogosRequestMessage">
+        <wsdl:part name="request" element="tns:traerCatalogosRequest"/>
+    </wsdl:message>
+
+    <wsdl:message name="traerCatalogosResponseMessage">
+        <wsdl:part name="response" element="tns:traerCatalogosResponse"/>
+    </wsdl:message>
+
     <wsdl:portType name="catalogoServicePort">
         <wsdl:operation name="crearCatalogo">
             <wsdl:input message="tns:crearCatalogoRequestMessage"/>
@@ -91,6 +128,10 @@
         <wsdl:operation name="modificarCatalogo">
             <wsdl:input message="tns:modificarCatalogoRequestMessage"/>
             <wsdl:output message="tns:modificarCatalogoResponseMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="traerCatalogos">
+            <wsdl:input message="tns:traerCatalogosRequestMessage"/>
+            <wsdl:output message="tns:traerCatalogosResponseMessage"/>
         </wsdl:operation>
     </wsdl:portType>
 
@@ -116,6 +157,15 @@
         </wsdl:operation>
         <wsdl:operation name="modificarCatalogo">
             <soap:operation soapAction="http://example.com/Catalogo/Modificar"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="traerCatalogos">
+            <soap:operation soapAction="http://example.com/Catalogo/Traer"/>
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>
