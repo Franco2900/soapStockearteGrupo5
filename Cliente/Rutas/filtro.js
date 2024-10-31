@@ -34,6 +34,7 @@ async function crearClienteSoap(url)
  *         description: Nombre del usuario.
  *         schema:
  *           type: string
+ *           example: "jdoe"
  *     responses:
  *       200:
  *         description: Datos consultados correctamente
@@ -89,24 +90,31 @@ router.get('/', async (req, res) => {
  *               usuario:
  *                 type: string
  *                 description: Nombre del usuario.
+ *                 example: "aperez"
  *               nombre:
  *                 type: string
  *                 description: Nombre del filtro.
+ *                 example: "Filtro 2024"
  *               producto_codigo:
  *                 type: string
  *                 description: Código del producto.
+ *                 example: ""
  *               tienda_codigo:
  *                 type: string
  *                 description: Código de la tienda.
+ *                 example: "T009"
  *               fecha_inicio:
  *                 type: string
  *                 description: Fecha de inicio.
+ *                 example: "2024-01-01"
  *               fecha_final:
  *                 type: string
  *                 description: Fecha final.
+ *                 example: "2024-12-31"
  *               estado:
  *                 type: string
  *                 description: Estado del filtro.
+ *                 example: ""
  *     responses:
  *       200:
  *         description: Filtro creado exitosamente.
@@ -168,24 +176,31 @@ router.post('/', async (req, res) => {
  *               usuario:
  *                 type: string
  *                 description: Nombre del usuario.
+ *                 example: "aperez"
  *               nombre:
  *                 type: string
  *                 description: Nombre del filtro.
+ *                 example: "Filtro 2024"
  *               producto_codigo:
  *                 type: string
  *                 description: Código del producto.
+ *                 example: ""
  *               tienda_codigo:
  *                 type: string
  *                 description: Código de la tienda.
+ *                 example: "T009"
  *               fecha_inicio:
  *                 type: string
  *                 description: Fecha de inicio.
+ *                 example: ""
  *               fecha_final:
  *                 type: string
  *                 description: Fecha final.
+ *                 example: ""
  *               estado:
  *                 type: string
  *                 description: Estado del filtro.
+ *                 example: "ACEPTADA"
  *     responses:
  *       200:
  *         description: Filtro modificado exitosamente.
@@ -247,9 +262,11 @@ router.put('/', async (req, res) => {
  *               usuario:
  *                 type: string
  *                 description: Nombre del usuario.
+ *                 example: "aperez"
  *               nombre:
  *                 type: string
  *                 description: Nombre del filtro.
+ *                 example: "Filtro 2024"
  *     responses:
  *       200:
  *         description: Filtro eliminado exitosamente.

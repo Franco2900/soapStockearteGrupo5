@@ -37,6 +37,7 @@ async function crearClienteSoap(url)
  *         description: Codigo de la tienda.
  *         schema:
  *           type: string
+ *           example: "T004"
  *     responses:
  *       200:
  *         description: Datos consultados correctamente
@@ -101,6 +102,15 @@ router.get('/', async (req, res) => {
  *               tienda_codigo:
  *                 type: string
  *                 description: Tienda del usuario.
+ *           example:
+ *             {
+ *               "codigos": [
+ *                 "P008",
+ *                 "P009"
+ *               ],
+ *               "titulo": "Prueba",
+ *               "tienda_codigo": "T004"
+ *             }
  *     responses:
  *       200:
  *         description: Catálogo creado exitosamente.
@@ -167,7 +177,7 @@ router.post('/', async (req, res) => {
  *           example:
  *             {
  *               "codigos": [
- *                 "P008",
+ *                 "P010",
  *                 "P009"
  *               ],
  *               "titulo": "Prueba"
@@ -240,6 +250,7 @@ router.put('/', async (req, res) => {
  *               titulo:
  *                 type: string
  *                 description: Título del catálogo.
+ *                 example: "Prueba"
  *     responses:
  *       200:
  *         description: Catálogo borrado exitosamente.

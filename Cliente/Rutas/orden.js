@@ -33,26 +33,31 @@ async function crearClienteSoap(url)
  *         description: Código del producto a buscar (opcional)
  *         schema:
  *           type: string
+ *           example: "P005"
  *       - in: query
  *         name: tienda_codigo
  *         description: Código de la tienda a buscar (opcional)
  *         schema:
  *           type: string
+ *           example: "T002"
  *       - in: query
  *         name: fecha_inicio
  *         description: Fecha de inicio a buscar (opcional)
  *         schema:
  *           type: string
+ *           example: "2024-10-29"
  *       - in: query
  *         name: fecha_final
  *         description: Fecha final a buscar (opcional)
  *         schema:
  *           type: string
+ *           example: "2024-11-01"
  *       - in: query
  *         name: estado
  *         description: Estado a buscar (SOLICITADA, RECHAZADA, ACEPTADA, RECIBIDA) (opcional)
  *         schema:
  *           type: string
+ *           example: "RECIBIDA"
  *     responses:
  *       200:
  *         description: Datos consultados correctamente
