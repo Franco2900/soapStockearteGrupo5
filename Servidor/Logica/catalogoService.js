@@ -175,6 +175,7 @@ async function crearCatalogoPDF(args) {
             reject(error);
         }
     }
+    /*
         try{
 
         await conexionDataBase.query(`INSERT INTO catalogo 
@@ -193,6 +194,7 @@ async function crearCatalogoPDF(args) {
         }catch(error){
             console.log(error);
         }
+    */
         pdf.end(); // Finalizar el PDF
     });
 };
@@ -206,16 +208,6 @@ async function modificarCatalogo(args)
 
     try
     {
-        /*
-        for (const codigoProducto of codigosProductos){
-
-            await conexionDataBase.query(`UPDATE catalogo_x_producto 
-                SET
-                producto_codigo = '${codigoProducto}'
-                WHERE 
-                titulo = '${titulo}'`, {});
-        };
-        */
         await conexionDataBase.query(`DELETE FROM catalogo_x_producto
         WHERE 
         titulo = '${titulo}'`, {});

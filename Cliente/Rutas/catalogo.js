@@ -129,15 +129,8 @@ router.post('/', async (req, res) => {
         console.log("\nRespuesta del servidor: ");
         console.log(respuesta);
 
-        const pdfBuffer = Buffer.from(respuesta.archivoPDF, 'base64'); // Converte el string base64 a un buffer
-        
-        // Escribe el buffer en un archivo PDF
-        fs.writeFile(`${req.body.titulo}.pdf`, pdfBuffer, (error) => {
-            if (error) console.error('Error al escribir el archivo PDF:', error);
-            else       console.log('PDF creado por el servidor recibido exitosamente');
-        });
-
-        res.send('PDF creado por el servidor recibido exitosamente');
+        //res.send('PDF creado por el servidor recibido exitosamente');
+        res.send(respuestaServidor[0]);
     }
     catch(error)
     {
