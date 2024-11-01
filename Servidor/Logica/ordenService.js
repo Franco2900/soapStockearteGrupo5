@@ -44,7 +44,11 @@ async function consultarOrdenesDeCompra(args)
 
     try
     {
-        let consultaSQL = `SELECT orden_de_compra.id AS id, estado, observaciones, fecha_de_solicitud, fecha_de_recepcion, tienda_codigo, producto_codigo, cantidad_solicitada
+        // AÑADIR: 
+        // SI EL USUARIO ES DE TIENDA CENTRAL, SE USA LA tienda_codigo QUE MANDO EL USUARIO (SI NO MANDO NINGUN tienda_codigo SE CONSULTA TODAS LAS TIENDAS)
+        // SI EL USUARIO ES DE TIENDA COMÚN, SE USA LA tienda_codigo DEL USUARIO
+
+        let consultaSQL = `SELECT orden_de_compra.id AS id, estado, observaciones, fecha_de_solicitud, fecha_de_recepcion, tienda_codigo, producto_codigo, SUM(cantidad_solicitada) AS cantidad_solicitada
             FROM orden_de_compra 
             INNER JOIN item ON orden_de_compra.id = item.id_orden_de_compra
             WHERE 1=1`;
@@ -54,6 +58,8 @@ async function consultarOrdenesDeCompra(args)
         if(args.fecha_inicio)    consultaSQL += ` AND fecha_de_solicitud >= '${args.fecha_inicio}' `;
         if(args.fecha_final)     consultaSQL += ` AND fecha_de_solicitud <= '${args.fecha_final}' `;
         if(args.tienda_codigo)   consultaSQL += ` AND tienda_codigo = '${args.tienda_codigo}' `;
+
+        consultaSQL += `GROUP BY producto_codigo, estado, tienda_codigo`
 
         //console.log(consultaSQL); //DEBUG
 
