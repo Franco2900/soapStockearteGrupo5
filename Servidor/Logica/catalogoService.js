@@ -264,15 +264,36 @@ async function traerCatalogos(args)
 {
     try
     {
+        // Consulto el tipo de usuario
+        let consultaTipoDeUsuario = await conexionDataBase.query(`SELECT central, codigo 
+            FROM tienda 
+            INNER JOIN usuario
+            ON codigo = tienda_codigo
+            WHERE tienda_codigo = '${args.tienda_codigo}' `, {});
+
+        console.log(Boolean(consultaTipoDeUsuario[0].central) ); // DEBUG        
+        /*
         var resultadosConsulta = await conexionDataBase.query(`SELECT cxp.*,p.nombre,p.talle,p.foto,p.color FROM catalogo c
         INNER JOIN catalogo_x_producto cxp on c.titulo = cxp.titulo
         INNER JOIN producto p on p.codigo = cxp.producto_codigo
         WHERE c.tienda_codigo = '${args.tienda_codigo}' `, {});
-        
+        */
+       let consultaSQL=  `SELECT cxp.*,p.nombre,p.talle,p.foto,p.color FROM catalogo c
+       INNER JOIN catalogo_x_producto cxp on c.titulo = cxp.titulo
+       INNER JOIN producto p on p.codigo = cxp.producto_codigo`;
+       
+       if(!Boolean(consultaTipoDeUsuario[0].central) ) // Si no es usuario de casa central
+       {
+        consultaSQL += ` WHERE c.tienda_codigo = '${args.tienda_codigo}' `;
+       };
+
+       var resultadosConsulta = await conexionDataBase.query(consultaSQL, {});
+
         for(var i=0; i< resultadosConsulta.length; i++){
             resultadosConsulta[i].foto = resultadosConsulta[i].foto.toString('base64'); 
         };
         
+
         // Agrupamos los productos por título, donde cada uno tiene un arreglo de productos
         resultadosConsulta = Object.values(resultadosConsulta.reduce((acc, row) => {
             // Verificamos si el titulo es distinto al anterior
