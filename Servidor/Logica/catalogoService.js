@@ -30,73 +30,67 @@ const catalogoService = {
                     };
 
                     console.log('PDF creado');
-                    callback(null, response);   
-                } 
-                catch (error) 
-                {
+                    callback(null, response);
+                }
+                catch (error) {
                     console.error('Error al generar el PDF:', error);
-                    callback({faultCode: 500, faultString: 'Error al generar el catálogo PDF',});
+                    callback({ faultCode: 500, faultString: 'Error al generar el catálogo PDF', });
                 }
 
             },
             modificarCatalogo: async function (args, callback) {
 
-                try
-                {
+                try {
                     console.log('******************************************************************');
                     console.log('Función llamada: modificarCatalogo\n');
 
                     console.log("Datos que llegan del cliente: ");
                     console.log(args);
-    
+
                     // Defino la lógica del servicio
                     await modificarCatalogo(args);
-                    
+
                     // Defino la respuesta del servidor
                     const response = {
                         mensaje: 'Catalogo modificado',
                     };
-            
+
                     callback(null, response);
                 }
-                catch(error)
-                {
+                catch (error) {
                     console.log(error);
                     callback(error, null);
                 }
-                
+
             },
             borrarCatalogo: async function (args, callback) {
 
-                try
-                {
+                try {
                     console.log('******************************************************************');
                     console.log('Función llamada: borrarCatalogo\n');
 
                     console.log("Datos que llegan del cliente: ");
                     console.log(args);
-    
+
                     // Defino la lógica del servicio
                     await borrarCatalogo(args);
-                    
+
                     // Defino la respuesta del servidor
                     const response = {
                         mensaje: 'Catalogo borrado',
                     };
-    
+
                     callback(null, response);
                 }
-                catch(error)
-                {
+                catch (error) {
                     console.log(error);
                     callback(error, null);
                 }
-                
+
             },
             traerCatalogos: async function (args, callback) {
-            
-                try
-                {
+
+                try {
                     console.log('******************************************************************');
                     console.log('Función llamada: traerCatalogos\n');
 
@@ -111,12 +105,11 @@ const catalogoService = {
 
                     callback(null, { catalogos: resultadosConsulta });
                 }
-                catch(error)
-                {
+                catch (error) {
                     console.log(error);
                     callback(error, null);
                 }
-            
+
             }
 
         }
@@ -128,10 +121,10 @@ const catalogoService = {
 async function crearCatalogoPDF(args) {
 
     const codigosProductos = args.codigos;
-    const titulo=args.titulo;
+    const titulo = args.titulo;
     const codigoTienda = args.tienda_codigo;
 
-    return new Promise( async (resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         const pdf = new PDFDocument();
         let buffers = [];
 
@@ -151,73 +144,71 @@ async function crearCatalogoPDF(args) {
 
         // Crear el contenido del PDF
         for (const codigoProducto of codigosProductos) {
-        try {
-            const resultadosConsulta = await conexionDataBase.query(`SELECT * FROM producto WHERE codigo = '${codigoProducto}' `, {});
+            try {
+                const resultadosConsulta = await conexionDataBase.query(`SELECT * FROM producto WHERE codigo = '${codigoProducto}' `, {});
 
-            pdf.font('Helvetica-Bold').text(`${resultadosConsulta[0].nombre}`, { align: 'center' });
-            pdf.text('');
-            pdf.font('Helvetica').text(`Codigo: ${resultadosConsulta[0].codigo}`);
-            pdf.text(`Talle: ${resultadosConsulta[0].talle}`);
-            pdf.text(`Color: ${resultadosConsulta[0].color}`);
+                pdf.font('Helvetica-Bold').text(`${resultadosConsulta[0].nombre}`, { align: 'center' });
+                pdf.text('');
+                pdf.font('Helvetica').text(`Codigo: ${resultadosConsulta[0].codigo}`);
+                pdf.text(`Talle: ${resultadosConsulta[0].talle}`);
+                pdf.text(`Color: ${resultadosConsulta[0].color}`);
 
-            const imageBuffer = await sharp(resultadosConsulta[0].foto)
-            .png()
-            .resize(300, 300)
-            .toBuffer();
+                const imageBuffer = await sharp(resultadosConsulta[0].foto)
+                    .png()
+                    .resize(300, 300)
+                    .toBuffer();
 
-            pdf.image(imageBuffer, (anchoPagina / 2) - 150, (altoPagina / 2) - 150, { width: 300, height: 300 });
-            pdf.rect((anchoPagina / 2) - 150, (altoPagina / 2) - 150, 300, 300).stroke();
-            
-            if (codigoProducto !== codigosProductos[codigosProductos.length - 1]) {
-                pdf.addPage();
+                pdf.image(imageBuffer, (anchoPagina / 2) - 150, (altoPagina / 2) - 150, { width: 300, height: 300 });
+                pdf.rect((anchoPagina / 2) - 150, (altoPagina / 2) - 150, 300, 300).stroke();
+
+                if (codigoProducto !== codigosProductos[codigosProductos.length - 1]) {
+                    pdf.addPage();
+                }
+
+            } catch (error) {
+                reject(error);
             }
-
-        } catch (error) {
-            reject(error);
         }
-    }
-    
-        try{
 
-        await conexionDataBase.query(`INSERT INTO catalogo 
+        try {
+
+            await conexionDataBase.query(`INSERT INTO catalogo 
         SET
         titulo = '${titulo}',
         tienda_codigo = '${codigoTienda}' `, {});
 
-        for (const codigoProducto of codigosProductos){
-            await conexionDataBase.query(`INSERT INTO catalogo_x_producto
+            for (const codigoProducto of codigosProductos) {
+                await conexionDataBase.query(`INSERT INTO catalogo_x_producto
             SET
             titulo = '${titulo}',
-            producto_codigo='${codigoProducto}'`,{});
-        }
+            producto_codigo='${codigoProducto}'`, {});
+            }
 
-        console.log('\nCatalogo creado');
-        }catch(error){
+            console.log('\nCatalogo creado');
+        } catch (error) {
             console.log(error);
         }
-    
+
         pdf.end(); // Finalizar el PDF
     });
 };
 
 
 
-async function modificarCatalogo(args)
-{   
+async function modificarCatalogo(args) {
     const titulo = args.titulo;
     const codigosProductos = args.codigos;
 
-    try
-    {
+    try {
         await conexionDataBase.query(`DELETE FROM catalogo_x_producto
         WHERE 
         titulo = '${titulo}'`, {});
 
-        for (const codigoProducto of codigosProductos){
+        for (const codigoProducto of codigosProductos) {
             await conexionDataBase.query(`INSERT INTO catalogo_x_producto
             SET
             titulo = '${titulo}',
-            producto_codigo='${codigoProducto}'`,{});
+            producto_codigo='${codigoProducto}'`, {});
         }
 
 
@@ -225,8 +216,7 @@ async function modificarCatalogo(args)
 
         return;
     }
-    catch(error)
-    {
+    catch (error) {
         console.log(error);
     }
 
@@ -235,11 +225,9 @@ async function modificarCatalogo(args)
 
 
 
-async function borrarCatalogo(args)
-{
+async function borrarCatalogo(args) {
 
-    try
-    {        
+    try {
         await conexionDataBase.query(`DELETE FROM catalogo_x_producto
             WHERE 
             titulo = '${args.titulo}'`, {});
@@ -252,47 +240,25 @@ async function borrarCatalogo(args)
 
         return;
     }
-    catch(error)
-    {
+    catch (error) {
         console.log(error);
     }
 
 };
 
 
-async function traerCatalogos(args)
-{
-    try
-    {
-        // Consulto el tipo de usuario
-        let consultaTipoDeUsuario = await conexionDataBase.query(`SELECT central, codigo 
-            FROM tienda 
-            INNER JOIN usuario
-            ON codigo = tienda_codigo
-            WHERE tienda_codigo = '${args.tienda_codigo}' `, {});
+async function traerCatalogos(args) {
+    try {
 
-        console.log(Boolean(consultaTipoDeUsuario[0].central) ); // DEBUG        
-        /*
         var resultadosConsulta = await conexionDataBase.query(`SELECT cxp.*,p.nombre,p.talle,p.foto,p.color FROM catalogo c
         INNER JOIN catalogo_x_producto cxp on c.titulo = cxp.titulo
         INNER JOIN producto p on p.codigo = cxp.producto_codigo
         WHERE c.tienda_codigo = '${args.tienda_codigo}' `, {});
-        */
-       let consultaSQL=  `SELECT cxp.*,p.nombre,p.talle,p.foto,p.color FROM catalogo c
-       INNER JOIN catalogo_x_producto cxp on c.titulo = cxp.titulo
-       INNER JOIN producto p on p.codigo = cxp.producto_codigo`;
-       
-       if(!Boolean(consultaTipoDeUsuario[0].central) ) // Si no es usuario de casa central
-       {
-        consultaSQL += ` WHERE c.tienda_codigo = '${args.tienda_codigo}' `;
-       };
 
-       var resultadosConsulta = await conexionDataBase.query(consultaSQL, {});
-
-        for(var i=0; i< resultadosConsulta.length; i++){
-            resultadosConsulta[i].foto = resultadosConsulta[i].foto.toString('base64'); 
+        for (var i = 0; i < resultadosConsulta.length; i++) {
+            resultadosConsulta[i].foto = resultadosConsulta[i].foto.toString('base64');
         };
-        
+
 
         // Agrupamos los productos por título, donde cada uno tiene un arreglo de productos
         resultadosConsulta = Object.values(resultadosConsulta.reduce((acc, row) => {
@@ -312,13 +278,12 @@ async function traerCatalogos(args)
 
             return acc;
         }, {}));
-  
+
         const datosLimpios = JSON.parse(JSON.stringify(resultadosConsulta));
 
         return datosLimpios;
     }
-    catch(error)
-    {
+    catch (error) {
         console.log(error);
     }
 }
