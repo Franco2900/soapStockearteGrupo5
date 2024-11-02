@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 31-10-2024 a las 03:20:14
+-- Tiempo de generación: 02-11-2024 a las 00:01:52
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -70,24 +70,15 @@ INSERT INTO `despacho` (`id`, `id_orden_de_compra`, `fecha_de_envio`) VALUES
 --
 
 CREATE TABLE `filtro` (
-  `usuario` varchar(50) NOT NULL,
+  `id` int(11) NOT NULL,
   `nombre` varchar(50) NOT NULL,
   `producto_codigo` varchar(50) DEFAULT NULL,
   `tienda_codigo` varchar(50) DEFAULT NULL,
   `fecha_inicio` date DEFAULT NULL,
   `fecha_final` date DEFAULT NULL,
-  `estado` varchar(50) DEFAULT NULL
+  `estado` varchar(50) DEFAULT NULL,
+  `id_usuario` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `filtro`
---
-
-INSERT INTO `filtro` (`usuario`, `nombre`, `producto_codigo`, `tienda_codigo`, `fecha_inicio`, `fecha_final`, `estado`) VALUES
-('aperez', 'recibida', '', '', '0000-00-00', '0000-00-00', 'RECIBIDA'),
-('asmith', '', '', '', '0000-00-00', '0000-00-00', 'ACEPTADA'),
-('jdoe', 'RECIBIDOS', '', '', '0000-00-00', '0000-00-00', 'RECIBIDA'),
-('jdoe', 'TIENDA 09', '', 'T009', '0000-00-00', '0000-00-00', '');
 
 -- --------------------------------------------------------
 
@@ -338,7 +329,8 @@ ALTER TABLE `despacho`
 -- Indices de la tabla `filtro`
 --
 ALTER TABLE `filtro`
-  ADD PRIMARY KEY (`usuario`,`nombre`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `usuario` (`id_usuario`);
 
 --
 -- Indices de la tabla `item`
@@ -398,6 +390,12 @@ ALTER TABLE `despacho`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT de la tabla `filtro`
+--
+ALTER TABLE `filtro`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT de la tabla `item`
 --
 ALTER TABLE `item`
@@ -437,6 +435,12 @@ ALTER TABLE `catalogo_x_producto`
 --
 ALTER TABLE `despacho`
   ADD CONSTRAINT `despacho_ibfk_1` FOREIGN KEY (`id_orden_de_compra`) REFERENCES `orden_de_compra` (`id`) ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `filtro`
+--
+ALTER TABLE `filtro`
+  ADD CONSTRAINT `filtro_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`) ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `item`

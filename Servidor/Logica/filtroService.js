@@ -127,7 +127,7 @@ async function traerFiltro(args)
     try
     {
         var resultadosConsulta = await conexionDataBase.query(`SELECT * FROM filtro 
-        WHERE usuario = '${args.usuario}' `, {});
+        WHERE id_usuario = '${args.id_usuario}' `, {});
         
         const datosLimpios = JSON.parse(JSON.stringify(resultadosConsulta) );
 
@@ -147,13 +147,13 @@ async function crearFiltro(args)
     {
         await conexionDataBase.query(`INSERT INTO filtro 
             SET
-            usuario = '${args.usuario}', 
             nombre = '${args.nombre}', 
             producto_codigo = '${args.producto_codigo}',
             tienda_codigo = '${args.tienda_codigo}', 
             fecha_inicio = '${args.fecha_inicio}',
             fecha_final = '${args.fecha_final}',
-            estado = '${args.estado}' `, {});
+            estado = '${args.estado}',
+            id_usuario = ${args.id_usuario} `, {});
 
         console.log('\nFiltro creado');
 
@@ -180,7 +180,7 @@ async function modificarFiltro(args)
             fecha_final = '${args.fecha_final}', 
             estado = '${args.estado}' 
             WHERE 
-            usuario = '${args.usuario}'
+            id_usuario = '${args.id_usuario}'
             AND nombre = '${args.nombre}' `, {});
 
             console.log('\nFiltro modificado');
@@ -202,7 +202,7 @@ async function borrarFiltro(args)
     {
         await conexionDataBase.query(`DELETE FROM filtro 
             WHERE 
-            usuario = '${args.usuario}'
+            id_usuario = '${args.id_usuario}'
             AND nombre = '${args.nombre}' `, {});
 
         console.log('\nFiltro borrado');

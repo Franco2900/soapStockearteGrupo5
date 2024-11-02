@@ -29,12 +29,13 @@ async function crearClienteSoap(url)
  *     tags: [Filtros]
  *     parameters:
  *       - in: query
- *         name: usuario
+ *         name: id_usuario
  *         required: true
  *         description: Nombre del usuario.
  *         schema:
- *           type: string
- *           example: "jdoe"
+ *           type: integer
+ *           example: 1
+ *           minimum: 1
  *     responses:
  *       200:
  *         description: Datos consultados correctamente
@@ -85,12 +86,13 @@ router.get('/', async (req, res) => {
  *         application/json:
  *           schema:
  *             type: object
- *             required: ["usuario", "nombre"]
+ *             required: ["id_usuario", "nombre"]
  *             properties:
- *               usuario:
- *                 type: string
+ *               id_usuario:
+ *                 type: integer
  *                 description: Nombre del usuario.
- *                 example: "aperez"
+ *                 example: 10
+ *                 minimum: 1
  *               nombre:
  *                 type: string
  *                 description: Nombre del filtro.
@@ -171,12 +173,13 @@ router.post('/', async (req, res) => {
  *         application/json:
  *           schema:
  *             type: object
- *             required: ["usuario", "nombre"]
+ *             required: ["id_usuario", "nombre"]
  *             properties:
- *               usuario:
- *                 type: string
+ *               id_usuario:
+ *                 type: integer
  *                 description: Nombre del usuario.
- *                 example: "aperez"
+ *                 example: 10
+ *                 minimun: 1
  *               nombre:
  *                 type: string
  *                 description: Nombre del filtro.
@@ -257,12 +260,13 @@ router.put('/', async (req, res) => {
  *         application/json:
  *           schema:
  *             type: object
- *             required: ["usuario", "nombre"]
+ *             required: ["id_usuario", "nombre"]
  *             properties:
- *               usuario:
- *                 type: string
+ *               id_usuario:
+ *                 type: integer
  *                 description: Nombre del usuario.
- *                 example: "aperez"
+ *                 example: 10
+ *                 minimun: 1
  *               nombre:
  *                 type: string
  *                 description: Nombre del filtro.
