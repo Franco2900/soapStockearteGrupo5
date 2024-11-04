@@ -14,7 +14,7 @@
             
             <xsd:complexType name="consultarOrdenesDeCompraRequest">
                 <xsd:sequence>
-                    <xsd:element name="usuario" type="xsd:string"/>
+                    <xsd:element name="id_usuario" type="xsd:integer"/>
                     <xsd:element name="producto_codigo" type="xsd:string"/>
                     <xsd:element name="tienda_codigo" type="xsd:string"/>
                     <xsd:element name="fecha_inicio" type="xsd:string"/>

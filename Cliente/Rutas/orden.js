@@ -29,10 +29,10 @@ async function crearClienteSoap(url)
  *     tags: [Ordenes]
  *     parameters:
  *       - in: query
- *         name: usuario
+ *         name: id_usuario
  *         description: Usuario que realiza la consulta
  *         schema:
- *           type: string
+ *           type: integer
  *           example: ""
  *       - in: query
  *         name: producto_codigo

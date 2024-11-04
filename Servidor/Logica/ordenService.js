@@ -45,7 +45,7 @@ async function consultarOrdenesDeCompra(args)
     try
     {
         // Consigo los datos
-        var usuario = args.usuario;
+        var id_usuario = args.id_usuario;
         var producto_codigo = args.producto_codigo;
         var estado = args.estado;
         var fecha_inicio = args.fecha_inicio;
@@ -57,7 +57,7 @@ async function consultarOrdenesDeCompra(args)
             FROM tienda 
             INNER JOIN usuario
             ON codigo = tienda_codigo
-            WHERE usuario = '${usuario}' `, {});
+            WHERE id = ${id_usuario} `, {});
 
         console.log(Boolean(consultaTipoDeUsuario[0].central) ); // DEBUG
         
@@ -72,15 +72,17 @@ async function consultarOrdenesDeCompra(args)
         if(fecha_inicio)    consultaSQL += ` AND fecha_de_solicitud >= '${fecha_inicio}' `;
         if(fecha_final)     consultaSQL += ` AND fecha_de_solicitud <= '${fecha_final}' `;
         
-        if(Boolean(consultaTipoDeUsuario[0].central) ) // Si es usuario de tienda central
-            if(tienda_codigo)   consultaSQL += ` AND tienda_codigo = '${tienda_codigo}' `; // Se usa la tienda_codigo que mando el usuario (si no mando ningún tienda_codigo, se consulta todas las tiendas)
+        // Si es usuario de tienda central
+        if(Boolean(consultaTipoDeUsuario[0].central) == true && Boolean(tienda_codigo) ) 
+            consultaSQL += ` AND tienda_codigo = '${tienda_codigo}' `; // Se usa la tienda_codigo que mando el usuario Si no mando ningún tienda_codigo, se consulta todas las tiendas)
         
-        else // Si es usuario de tienda comun
+        // Si es usuario de tienda comun
+        if(Boolean(consultaTipoDeUsuario[0].central) == false )
             consultaSQL += ` AND tienda_codigo = '${consultaTipoDeUsuario[0].codigo}' `;   // Se usa la tienda_codigo del usuario
 
         consultaSQL += ` GROUP BY producto_codigo, estado, tienda_codigo`;
 
-        //console.log(consultaSQL); //DEBUG
+        console.log(consultaSQL); //DEBUG
 
         var resultadosConsulta = await conexionDataBase.query(consultaSQL, {});            
         const datosLimpios = JSON.parse(JSON.stringify(resultadosConsulta) );
