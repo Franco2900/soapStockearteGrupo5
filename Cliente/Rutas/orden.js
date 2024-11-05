@@ -33,7 +33,7 @@ async function crearClienteSoap(url)
  *         description: Usuario que realiza la consulta
  *         schema:
  *           type: integer
- *           example: ""
+ *           example: 2
  *       - in: query
  *         name: producto_codigo
  *         description: Código del producto a buscar (opcional)
