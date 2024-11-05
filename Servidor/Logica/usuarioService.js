@@ -75,9 +75,10 @@ async function cargarUsuarios(args)
 
         var observaciones = '';
         var lineas = 1; // Las lineas en los archivos .csv empiezan a partir del 1
+        var lineasConErrores = [];
 
         // Verificación - Campos vacios (y existencia del código de tienda)
-        for(var i = datosUsuarios.length-1; i >= 0 ; i--)
+        for(var i = 0; i < datosUsuarios.length ; i++)
         {
             // Verifico que la variable NO sea una de las siguientes: false, 0, "", null, undefined, NaN 
             if(!datosUsuarios[i].Usuario)      observaciones += `En la linea ${i+lineas} falta el usuario\n`;
@@ -89,15 +90,15 @@ async function cargarUsuarios(args)
             if(!datosUsuarios[i].Usuario  || !datosUsuarios[i].Password || !datosUsuarios[i].Nombre ||
                !datosUsuarios[i].Apellido || !datosUsuarios[i].CodigoTienda)
             {
-                datosUsuarios.splice(i, 1); // Elimino el elemento del arreglo
-                lineas++; // Sumo un 1 para poder seguir contando bien en que linea del .csv esta el error
+                lineasConErrores.push(i);
             } 
         }
 
 
         // Verificación: Estado de la tienda (si está deshabilitada, no da de alta el usuario)
-        var tiendasConsulta = await conexionDataBase.query(`SELECT * FROM tienda`, {});
-        for(var i = datosUsuarios.length-1; i >= 0 ; i--)
+        let tiendasConsulta = await conexionDataBase.query(`SELECT * FROM tienda`, {});
+        
+        for(var i = 0; i < datosUsuarios.length ; i++)
         {
             let tiendaHabilitada = true;
 
@@ -114,29 +115,51 @@ async function cargarUsuarios(args)
             if (!tiendaHabilitada) 
             {
                 observaciones += `La tienda de la linea ${i+lineas} está deshabilitada\n`;
-                datosUsuarios.splice(i, 1);
-                lineas++;
+                lineasConErrores.push(i);
             }
         }
         
 
         // Verificación - Duplicidad de usuarios
-        for(var i = datosUsuarios.length-1; i >= 0 ; i--)
+        for(var i = 0; i < datosUsuarios.length ; i++)
         {
-            for(var j = datosUsuarios.length-1; j >= 0 ; j--)
+            for(var j = 0; j < datosUsuarios.length ; j++)
             {
                 if(i != j && datosUsuarios[i].Usuario == datosUsuarios[j].Usuario)
                 {
                     observaciones += `El usuario ${datosUsuarios[i].Usuario} esta repetido en las lineas ${j+lineas} y ${i+lineas}\n`;
-                    datosUsuarios.splice(i, 1);
-                    lineas++;
+                    lineasConErrores.push(i);
                     break;
                 }
             }
         }
 
+
+        // Verificación - Existencia de usuario en la base de datos
+        for(var i = 0; i < datosUsuarios.length ; i++)
+        {
+            var existeUsuario = await conexionDataBase.chequearExistenciaUsuario(datosUsuarios[i].Usuario);
+
+            if(existeUsuario)
+            {
+                observaciones += `El usuario ${datosUsuarios[i].Usuario} en la linea ${i+lineas} ya existe en la base de datos\n`;
+                lineasConErrores.push(i);
+            }
+        }
+
+        
+        // Elimino las lineas con errores
+        for(var i = 0; i < datosUsuarios.length ; i++)
+        {
+            if(lineasConErrores.includes(i) )
+            {
+                datosUsuarios.splice(i, 1);
+                i--;
+            }
+        }
+
         console.log(observaciones);
-        console.log(`Hay en total ${lineas} lineas con errores`);
+        console.log(`Hay en total ${lineasConErrores.length} lineas con errores`);
 
         // Carga a la base de datos
         for(var i = 0; i < datosUsuarios.length; i++)
