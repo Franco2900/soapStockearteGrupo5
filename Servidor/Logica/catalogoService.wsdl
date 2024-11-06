@@ -6,8 +6,7 @@
 
     <wsdl:types>
         <xsd:schema targetNamespace="http://localhost:9000/catalogoService">
-        
-            <xsd:element name="crearCatalogoRequest" type="tns:crearCatalogoRequest"/>
+             <xsd:element name="crearCatalogoRequest" type="tns:crearCatalogoRequest"/>
             <xsd:element name="crearCatalogoResponse" type="tns:crearCatalogoResponse"/>
             <xsd:element name="borrarCatalogoRequest" type="tns:borrarCatalogoRequest"/>
             <xsd:element name="borrarCatalogoResponse" type="tns:borrarCatalogoResponse"/>
@@ -15,13 +14,16 @@
             <xsd:element name="modificarCatalogoResponse" type="tns:modificarCatalogoResponse"/>
             <xsd:element name="traerCatalogosRequest" type="tns:traerCatalogosRequest"/>
             <xsd:element name="traerCatalogosResponse" type="tns:traerCatalogosResponse"/>
+            <xsd:element name="asignarProductosRequest" type="tns:asignarProductosRequest"/>
+            <xsd:element name="asignarProductosResponse" type="tns:asignarProductosResponse"/>
+            <xsd:element name="traerProductosRequest" type="tns:traerProductosRequest"/>
+            <xsd:element name="traerProductosResponse" type="tns:traerProductosResponse"/>
 
             <xsd:complexType name="crearCatalogoRequest">
                 <xsd:sequence>
                     <xsd:element name="codigos" type="xsd:string" maxOccurs="unbounded"/>
                     <xsd:element name="titulo" type="xsd:string"/>
                     <xsd:element name="tienda_codigo" type="xsd:string"/>
-
                 </xsd:sequence>
             </xsd:complexType>
 
@@ -56,7 +58,19 @@
                 </xsd:sequence>
             </xsd:complexType>
 
-            <!-- Define el tipo producto para los elementos dentro de un catalogo -->
+            <xsd:complexType name="asignarProductosRequest">
+                <xsd:sequence>
+                    <xsd:element name="codigos" type="xsd:string" maxOccurs="unbounded"/>
+                    <xsd:element name="titulo" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+
+            <xsd:complexType name="asignarProductosResponse">
+                <xsd:sequence>
+                    <xsd:element name="mensaje" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+
             <xsd:complexType name="producto">
                 <xsd:sequence>
                     <xsd:element name="producto_codigo" type="xsd:string"/>
@@ -67,7 +81,6 @@
                 </xsd:sequence>
             </xsd:complexType>
 
-            <!-- Define el tipo catalogo para agrupar productos bajo un titulo -->
             <xsd:complexType name="catalogo">
                 <xsd:sequence>
                     <xsd:element name="titulo" type="xsd:string"/>
@@ -75,7 +88,6 @@
                 </xsd:sequence>
             </xsd:complexType>
 
-            <!-- Define traerCatalogosRequest y traerCatalogosResponse -->
             <xsd:complexType name="traerCatalogosRequest">
                 <xsd:sequence>
                     <xsd:element name="tienda_codigo" type="xsd:string"/>
@@ -85,6 +97,18 @@
             <xsd:complexType name="traerCatalogosResponse">
                 <xsd:sequence>
                     <xsd:element name="catalogos" type="tns:catalogo" minOccurs="0" maxOccurs="unbounded"/>
+                </xsd:sequence>
+            </xsd:complexType>
+
+            <xsd:complexType name="traerProductosRequest">
+                <xsd:sequence>
+                    <xsd:element name="titulo" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+
+            <xsd:complexType name="traerProductosResponse">
+                <xsd:sequence>
+                    <xsd:element name="productos" type="tns:producto" minOccurs="0" maxOccurs="unbounded"/>
                 </xsd:sequence>
             </xsd:complexType>
 
@@ -123,6 +147,22 @@
         <wsdl:part name="response" element="tns:traerCatalogosResponse"/>
     </wsdl:message>
 
+    <wsdl:message name="asignarProductosRequestMessage">
+        <wsdl:part name="request" element="tns:asignarProductosRequest"/>
+    </wsdl:message>
+
+    <wsdl:message name="asignarProductosResponseMessage">
+        <wsdl:part name="response" element="tns:asignarProductosResponse"/>
+    </wsdl:message>
+
+    <wsdl:message name="traerProductosRequestMessage">
+        <wsdl:part name="request" element="tns:traerProductosRequest"/>
+    </wsdl:message>
+
+    <wsdl:message name="traerProductosResponseMessage">
+        <wsdl:part name="response" element="tns:traerProductosResponse"/>
+    </wsdl:message>
+
     <wsdl:portType name="catalogoServicePort">
         <wsdl:operation name="crearCatalogo">
             <wsdl:input message="tns:crearCatalogoRequestMessage"/>
@@ -139,6 +179,16 @@
         <wsdl:operation name="traerCatalogos">
             <wsdl:input message="tns:traerCatalogosRequestMessage"/>
             <wsdl:output message="tns:traerCatalogosResponseMessage"/>
+        </wsdl:operation>
+
+        <wsdl:operation name="asignarProductos">
+            <wsdl:input message="tns:asignarProductosRequestMessage"/>
+            <wsdl:output message="tns:asignarProductosResponseMessage"/>
+        </wsdl:operation>
+
+        <wsdl:operation name="traerProductos">
+            <wsdl:input message="tns:traerProductosRequestMessage"/>
+            <wsdl:output message="tns:traerProductosResponseMessage"/>
         </wsdl:operation>
     </wsdl:portType>
 
@@ -173,6 +223,26 @@
         </wsdl:operation>
         <wsdl:operation name="traerCatalogos">
             <soap:operation soapAction="http://example.com/Catalogo/Traer"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="asignarProductos">
+            <soap:operation soapAction="http://example.com/Catalogo/AsignarProductos"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="traerProductos">
+            <soap:operation soapAction="http://example.com/Catalogo/TraerProductos"/>
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>

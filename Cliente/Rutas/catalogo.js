@@ -78,6 +78,59 @@ router.get('/', async (req, res) => {
 
 /**
  * @swagger
+ * /catalogo/traerProductos:
+ *   get:
+ *     summary: Trae los productos de un catalogo.
+ *     description: Trae todos los productos de un catalogo especifico.
+ *     tags: [Catálogos]
+ *     parameters:
+ *       - in: query
+ *         name: titulo
+ *         required: true
+ *         description: Titulo del catalogo.
+ *         schema:
+ *           type: string
+ *           example: "Titulo"
+ *     responses:
+ *       200:
+ *         description: Datos consultados correctamente
+ *       500:
+ *         description: Error al procesar la solicitud SOAP
+ */
+router.get('/traerProductos', async (req, res) => { 
+    // Para un GET, el cliente envia la request de la siguiente forma:  /endpoint?parametro1=valor1&parametro2=valor2
+    // Aunque puede recibir json crudo como los POST, no es una buena práctica mandar json crudo a un GET
+        
+        try
+        {
+            console.log("*****************************************************************");
+            console.log("Solicitud del front-end recibida. Método llamado: traerProductos\n");
+        
+            console.log("Datos que llegan del front-end: ");
+            console.log(req.query);
+        
+            var clienteSoap = await crearClienteSoap('http://localhost:9000/catalogoService?wsdl');
+            var respuestaServidor = await clienteSoap.traerProductosAsync({titulo: req.query.titulo});
+            var respuesta = respuestaServidor[0]; 
+        
+            // DEBUG
+            console.log("\nRespuesta del servidor: ");
+            console.log(respuesta);
+            //console.log(JSON.stringify(respuesta, null, 2));
+
+            res.send(respuesta);
+        }
+        catch(error)
+        {
+            console.log(error);
+            res.status(500).send('Error al procesar la solicitud SOAP');
+        }
+        
+});
+
+
+/**
+ * @swagger
  * /catalogo:
  *   post:
  *     summary: Crea un catálogo.
@@ -150,6 +203,79 @@ router.post('/', async (req, res) => {
     }
 
 });
+
+
+/**
+ * @swagger
+ * /catalogo/asignar:
+ *   put:
+ *     summary: Asigna productos a un catálogo.
+ *     description: Asigna productos a un catálogo ya existente.
+ *     tags: [Catálogos]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: ["codigos", "titulo"]
+ *             properties:
+ *               codigos:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 description: Lista de códigos para el catálogo.
+ *               titulo:
+ *                 type: string
+ *                 description: Título del catálogo.
+ *           example:
+ *             {
+ *               "codigos": [
+ *                 "P008",
+ *                 "P009"
+ *               ],
+ *               "titulo": "Prueba"
+ *             }
+ *     responses:
+ *       200:
+ *         description: Productos asignados exitosamente.
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: PDF creado por el servidor recibido exitosamente
+ *       500:
+ *         description: Error al procesar la solicitud SOAP.
+ */
+router.put('/asignar', async (req, res) => {
+
+    try
+    {
+        console.log("*****************************************************************");
+        console.log("Solicitud del front-end recibida. Método llamado: asignarProductos\n");
+
+        console.log("Datos que llegan del front-end: ");
+        console.log(req.body);
+
+        var clienteSoap = await crearClienteSoap('http://localhost:9000/catalogoService?wsdl'); // El cliente tiene que escuchar en la misma ruta que el servidor provee
+        const respuestaServidor = await clienteSoap.asignarProductosAsync({ codigos: req.body.codigos, titulo:req.body.titulo});
+        var respuesta = respuestaServidor[0]; // Devuelve 3 cosas: los datos procesados, la respuesta del servidor en formato XML y la solicitud enviada por el cliente en formato XML
+
+        // DEBUG
+        console.log("\nRespuesta del servidor: ");
+        console.log(respuesta);
+
+        //res.send('PDF creado por el servidor recibido exitosamente');
+        res.send(respuestaServidor[0]);
+    }
+    catch(error)
+    {
+        console.log(error);
+        res.status(500).send('Error al procesar la solicitud SOAP');
+    }
+
+});
+
 
 /**
  * @swagger

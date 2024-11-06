@@ -110,6 +110,51 @@ const catalogoService = {
                     callback(error, null);
                 }
 
+            },
+            asignarProductos: async function (args, callback) {
+
+                try {
+                    console.log('******************************************************************');
+                    console.log('Función llamada: asignarProductos\n');
+
+                    console.log("Datos que llegan del cliente: ");
+                    console.log(args);
+
+                    // Defino la lógica del servicio
+                    var resultadosConsulta = await asignarProductos(args);
+                    console.log('\nDatos devueltos al cliente');
+                    console.log(resultadosConsulta);
+                    //console.log(JSON.stringify(resultadosConsulta, null, 2));
+
+                    callback(null, { mensaje: 'Catalogo modificado' });
+                }
+                catch (error) {
+                    console.log(error);
+                    callback(error, null);
+                }
+
+            },
+            traerProductos: async function (args, callback) {
+
+                try {
+                    console.log('******************************************************************');
+                    console.log('Función llamada: traerProductos\n');
+
+                    console.log("Datos que llegan del cliente: ");
+                    console.log(args);
+
+                    // Defino la lógica del servicio
+                    var resultadosConsulta = await traerProductos(args);
+                    console.log('\nDatos devueltos al cliente');
+                    console.log(resultadosConsulta);
+
+                    callback(null, { productos: resultadosConsulta });
+                }
+                catch (error) {
+                    console.log(error);
+                    callback(error, null);
+                }
+
             }
 
         }
@@ -288,6 +333,47 @@ async function traerCatalogos(args) {
     }
 }
 
+async function asignarProductos(args) {
+    const titulo = args.titulo;
+    const codigosProductos = args.codigos;
+
+    try {
+        for (let codigo of codigosProductos) {
+            await conexionDataBase.query(`INSERT INTO catalogo_x_producto
+            SET
+            titulo = '${titulo}',
+            producto_codigo='${codigo}'`, {});
+        }
+        console.log('\nCatalogo modificado');
+
+        return;
+    }
+    catch (error) {
+        console.log(error);
+    }
+
+}
+
+async function traerProductos(args) {
+    const titulo = args.titulo;
+    try {
+        const resultadosConsulta = await conexionDataBase.query(`SELECT p.codigo, p.nombre, p.talle, p.foto, p.color
+            FROM PRODUCTO p, catalogo_x_producto cp
+            where p.codigo = cp.producto_codigo
+            AND cp.titulo = '${titulo}'`, {});
+        
+        for (var i = 0; i < resultadosConsulta.length; i++) {
+            resultadosConsulta[i].foto = resultadosConsulta[i].foto.toString('base64');
+        };
+
+        const datosLimpios = JSON.parse(JSON.stringify(resultadosConsulta));
+        return datosLimpios;
+    }
+    catch (error) {
+        console.log(error);
+    }
+
+}
 
 /*********************************** EXPORTACIÓN DE LA LÓGICA ***********************************/
 module.exports = { catalogoService };
