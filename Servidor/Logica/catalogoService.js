@@ -155,6 +155,51 @@ const catalogoService = {
                     callback(error, null);
                 }
 
+            },
+            desasignarProductos: async function (args, callback) {
+
+                try {
+                    console.log('******************************************************************');
+                    console.log('Función llamada: desasignarProductos\n');
+
+                    console.log("Datos que llegan del cliente: ");
+                    console.log(args);
+
+                    // Defino la lógica del servicio
+                    var resultadosConsulta = await desasignarProductos(args);
+                    console.log('\nDatos devueltos al cliente');
+                    console.log(resultadosConsulta);
+                    //console.log(JSON.stringify(resultadosConsulta, null, 2));
+
+                    callback(null, { mensaje: 'Catalogo modificado' });
+                }
+                catch (error) {
+                    console.log(error);
+                    callback(error, null);
+                }
+
+            },
+            traerNoProductos: async function (args, callback) {
+
+                try {
+                    console.log('******************************************************************');
+                    console.log('Función llamada: traerNoProductos\n');
+
+                    console.log("Datos que llegan del cliente: ");
+                    console.log(args);
+
+                    // Defino la lógica del servicio
+                    var resultadosConsulta = await traerNoProductos(args);
+                    console.log('\nDatos devueltos al cliente');
+                    console.log(resultadosConsulta);
+
+                    callback(null, { productos: resultadosConsulta });
+                }
+                catch (error) {
+                    console.log(error);
+                    callback(error, null);
+                }
+
             }
 
         }
@@ -354,6 +399,26 @@ async function asignarProductos(args) {
 
 }
 
+async function desasignarProductos(args) {
+    const titulo = args.titulo;
+    const codigosProductos = args.codigos;
+
+    try {
+        for (let codigo of codigosProductos) {
+            await conexionDataBase.query(`DELETE FROM catalogo_x_producto
+            WHERE titulo = '${titulo}'
+            AND producto_codigo='${codigo}'`, {});
+            console.log('\nProducto quitado');
+        }
+        console.log('\nCatalogo modificado');
+
+        return;
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
+
 async function traerProductos(args) {
     const titulo = args.titulo;
     try {
@@ -373,6 +438,37 @@ async function traerProductos(args) {
         console.log(error);
     }
 
+}
+
+async function traerNoProductos(args) {
+    const titulo = args.titulo;
+    try {
+        const resultadosConsulta = await conexionDataBase.query(`SELECT p.codigo, p.nombre, p.talle, p.foto, p.color
+            FROM producto p
+            JOIN tienda_x_producto t ON p.codigo = t.producto_codigo
+            WHERE t.tienda_codigo = (
+                SELECT c.tienda_codigo 
+                FROM catalogo c
+                WHERE c.titulo = '${titulo}'
+                LIMIT 1
+            )
+            AND NOT EXISTS (
+                SELECT 1
+                FROM catalogo_x_producto c
+                WHERE c.producto_codigo = p.codigo 
+                AND c.titulo = '${titulo}'
+            )`, {});
+        
+        for (var i = 0; i < resultadosConsulta.length; i++) {
+            resultadosConsulta[i].foto = resultadosConsulta[i].foto.toString('base64');
+        };
+
+        const datosLimpios = JSON.parse(JSON.stringify(resultadosConsulta));
+        return datosLimpios;
+    }
+    catch (error) {
+        console.log(error);
+    }
 }
 
 /*********************************** EXPORTACIÓN DE LA LÓGICA ***********************************/
