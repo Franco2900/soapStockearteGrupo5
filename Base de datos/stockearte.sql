@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 02-11-2024 a las 00:01:52
+-- Tiempo de generación: 07-11-2024 a las 20:05:46
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -349,7 +349,8 @@ ALTER TABLE `novedades`
 -- Indices de la tabla `orden_de_compra`
 --
 ALTER TABLE `orden_de_compra`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `tienda_codigo` (`tienda_codigo`);
 
 --
 -- Indices de la tabla `producto`
@@ -447,6 +448,12 @@ ALTER TABLE `filtro`
 --
 ALTER TABLE `item`
   ADD CONSTRAINT `item_ibfk_1` FOREIGN KEY (`id_orden_de_compra`) REFERENCES `orden_de_compra` (`id`) ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `orden_de_compra`
+--
+ALTER TABLE `orden_de_compra`
+  ADD CONSTRAINT `orden_de_compra_ibfk_1` FOREIGN KEY (`tienda_codigo`) REFERENCES `tienda` (`codigo`) ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `tienda_x_producto`

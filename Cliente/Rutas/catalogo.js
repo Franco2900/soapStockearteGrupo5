@@ -78,7 +78,7 @@ router.get('/', async (req, res) => {
 
 /**
  * @swagger
- * /catalogo/traerProductos:
+ * /catalogo/productos:
  *   get:
  *     summary: Trae los productos de un catalogo.
  *     description: Trae todos los productos de un catalogo especifico.
@@ -97,7 +97,7 @@ router.get('/', async (req, res) => {
  *       500:
  *         description: Error al procesar la solicitud SOAP
  */
-router.get('/traerProductos', async (req, res) => { 
+router.get('/productos', async (req, res) => { 
     // Para un GET, el cliente envia la request de la siguiente forma:  /endpoint?parametro1=valor1&parametro2=valor2
     // Aunque puede recibir json crudo como los POST, no es una buena práctica mandar json crudo a un GET
         
@@ -131,7 +131,7 @@ router.get('/traerProductos', async (req, res) => {
 
 /**
  * @swagger
- * /catalogo/traerNoProductos:
+ * /catalogo/noProductos:
  *   get:
  *     summary: Trae los productos que no tiene un catalogo pero que tiene la tienda.
  *     description: Trae todos los productos que no tiene un catalogo especifico pero que tiene la tienda.
@@ -150,7 +150,7 @@ router.get('/traerProductos', async (req, res) => {
  *       500:
  *         description: Error al procesar la solicitud SOAP
  */
-router.get('/traerNoProductos', async (req, res) => { 
+router.get('/noProductos', async (req, res) => { 
     // Para un GET, el cliente envia la request de la siguiente forma:  /endpoint?parametro1=valor1&parametro2=valor2
     // Aunque puede recibir json crudo como los POST, no es una buena práctica mandar json crudo a un GET
         
@@ -224,7 +224,7 @@ router.get('/traerNoProductos', async (req, res) => {
  *           text/plain:
  *             schema:
  *               type: string
- *               example: PDF creado por el servidor recibido exitosamente
+ *               example: Catálogo creado por el servidor recibido exitosamente
  *       500:
  *         description: Error al procesar la solicitud SOAP.
  */
@@ -246,7 +246,7 @@ router.post('/', async (req, res) => {
         console.log("\nRespuesta del servidor: ");
         console.log(respuesta);
 
-        //res.send('PDF creado por el servidor recibido exitosamente');
+        //res.send('Catálogo creado por el servidor recibido exitosamente');
         res.send(respuestaServidor[0]);
     }
     catch(error)
@@ -260,8 +260,8 @@ router.post('/', async (req, res) => {
 
 /**
  * @swagger
- * /catalogo/asignar:
- *   put:
+ * /catalogo/productos:
+ *   post:
  *     summary: Asigna productos a un catálogo.
  *     description: Asigna productos a un catálogo ya existente.
  *     tags: [Catálogos]
@@ -296,11 +296,11 @@ router.post('/', async (req, res) => {
  *           text/plain:
  *             schema:
  *               type: string
- *               example: PDF creado por el servidor recibido exitosamente
+ *               example: Productos asignados exitosamente
  *       500:
  *         description: Error al procesar la solicitud SOAP.
  */
-router.put('/asignar', async (req, res) => {
+router.post('/productos', async (req, res) => {
 
     try
     {
@@ -318,7 +318,7 @@ router.put('/asignar', async (req, res) => {
         console.log("\nRespuesta del servidor: ");
         console.log(respuesta);
 
-        //res.send('PDF creado por el servidor recibido exitosamente');
+        //res.send('Productos asignados exitosamente');
         res.send(respuestaServidor[0]);
     }
     catch(error)
@@ -332,8 +332,8 @@ router.put('/asignar', async (req, res) => {
 
 /**
  * @swagger
- * /catalogo/desasignar:
- *   put:
+ * /catalogo/productos:
+ *   delete:
  *     summary: Desasigna productos a un catálogo.
  *     description: Desasigna productos a un catálogo ya existente.
  *     tags: [Catálogos]
@@ -368,11 +368,11 @@ router.put('/asignar', async (req, res) => {
  *           text/plain:
  *             schema:
  *               type: string
- *               example: PDF creado por el servidor recibido exitosamente
+ *               example: Productos desasignados exitosamente
  *       500:
  *         description: Error al procesar la solicitud SOAP.
  */
-router.put('/desasignar', async (req, res) => {
+router.delete('/productos', async (req, res) => {
 
     try
     {
@@ -390,7 +390,7 @@ router.put('/desasignar', async (req, res) => {
         console.log("\nRespuesta del servidor: ");
         console.log(respuesta);
 
-        //res.send('PDF creado por el servidor recibido exitosamente');
+        //res.send('Productos desasignados exitosamente');
         res.send(respuestaServidor[0]);
     }
     catch(error)
@@ -531,7 +531,7 @@ router.delete('/', async (req, res) => {
         console.log("\nRespuesta del servidor: ");
         console.log(respuesta);
 
-        res.send('PDF borrado exitosamente');
+        res.send('Catalogo borrado exitosamente');
     }
     catch(error)
     {
