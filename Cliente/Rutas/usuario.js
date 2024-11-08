@@ -81,7 +81,7 @@ router.post('/', upload.single('archivoCSV'), async (req, res) => {
         var archivoBase64 = Buffer.from(archivo).toString('base64'); // Codifica el contenido del archivo a Base64
         //console.log(archivoBase64); // DEBUG
 
-        var clienteSoap = await crearClienteSoap('http://localhost:9000/usuarioService?wsdl');
+        var clienteSoap = await crearClienteSoap('http://localhost:6789/usuarioService?wsdl');
         var respuestaServidor = await clienteSoap.cargarUsuariosAsync({ archivoCSV: archivoBase64 });
         var respuesta = respuestaServidor[0];
 

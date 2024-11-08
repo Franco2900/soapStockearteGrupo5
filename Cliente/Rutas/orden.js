@@ -83,7 +83,7 @@ router.get('/', async (req, res) => {
         console.log("Datos que llegan del front-end: ");
         console.log(req.query);
     
-        var clienteSoap = await crearClienteSoap('http://localhost:9000/ordenService?wsdl');
+        var clienteSoap = await crearClienteSoap('http://localhost:6789/ordenService?wsdl');
         var respuestaServidor = await clienteSoap.consultarOrdenesDeCompraAsync(req.query);
         var respuesta = respuestaServidor[0]; 
     

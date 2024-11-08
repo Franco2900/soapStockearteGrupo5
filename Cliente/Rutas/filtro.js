@@ -54,7 +54,7 @@ router.get('/', async (req, res) => {
         console.log("Datos que llegan del front-end: ");
         console.log(req.query);
     
-        var clienteSoap = await crearClienteSoap('http://localhost:9000/filtroService?wsdl');
+        var clienteSoap = await crearClienteSoap('http://localhost:6789/filtroService?wsdl');
         var respuestaServidor = await clienteSoap.traerFiltroAsync(req.query);
         var respuesta = respuestaServidor[0]; 
     
@@ -141,7 +141,7 @@ router.post('/', async (req, res) => {
         console.log("Datos que llegan del front-end: ");
         console.log(req.body);
 
-        var clienteSoap = await crearClienteSoap('http://localhost:9000/filtroService?wsdl');
+        var clienteSoap = await crearClienteSoap('http://localhost:6789/filtroService?wsdl');
         var respuestaServidor = await clienteSoap.crearFiltroAsync(req.body);
         var respuesta = respuestaServidor[0]; 
 
@@ -228,7 +228,7 @@ router.put('/', async (req, res) => {
         console.log("Datos que llegan del front-end: ");
         console.log(req.body);
 
-        var clienteSoap = await crearClienteSoap('http://localhost:9000/filtroService?wsdl');
+        var clienteSoap = await crearClienteSoap('http://localhost:6789/filtroService?wsdl');
         var respuestaServidor = await clienteSoap.modificarFiltroAsync(req.body);
         var respuesta = respuestaServidor[0]; 
 
@@ -295,7 +295,7 @@ router.delete('/', async (req, res) => {
         console.log("Datos que llegan del front-end: ");
         console.log(req.body);
 
-        var clienteSoap = await crearClienteSoap('http://localhost:9000/filtroService?wsdl');
+        var clienteSoap = await crearClienteSoap('http://localhost:6789/filtroService?wsdl');
         var respuestaServidor = await clienteSoap.borrarFiltroAsync(req.body);
         var respuesta = respuestaServidor[0]; 
 

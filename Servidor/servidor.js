@@ -27,21 +27,21 @@ var server = http.createServer(function(request,response) {
     response.end('404 - No encontrado: ' + request.url);
 });
 
-server.listen(9000); // Dirección en la que escucha el servidor
+server.listen(6789); // Dirección en la que escucha el servidor
 
 // Rutas que escucha el servidor
 soap.listen(server, '/ordenService', ordenService, archivoWSDLOrdenService, function(){
-    console.log('Servidor SOAP escuchando en http://localhost:9000/ordenService?wsdl'); // El server escucha en la ruta indicada y muestra el archivo WSDL al agregar ?wsdl a la ruta 
+    console.log('Servidor SOAP escuchando en http://localhost:6789/ordenService?wsdl'); // El server escucha en la ruta indicada y muestra el archivo WSDL al agregar ?wsdl a la ruta 
 });
 
 soap.listen(server, '/filtroService', filtroService, archivoWSDLFiltroService, function(){
-    console.log('Servidor SOAP escuchando en http://localhost:9000/filtroService?wsdl'); 
+    console.log('Servidor SOAP escuchando en http://localhost:6789/filtroService?wsdl'); 
 });
 
 soap.listen(server, '/catalogoService', catalogoService, archivoWSDLCatalogoService, function(){
-    console.log('Servidor SOAP escuchando en http://localhost:9000/catalogoService?wsdl'); 
+    console.log('Servidor SOAP escuchando en http://localhost:6789/catalogoService?wsdl'); 
 });
 
 soap.listen(server, '/usuarioService', usuarioService, archivoWSDLUsuarioService, function(){
-    console.log('Servidor SOAP escuchando en http://localhost:9000/usuarioService?wsdl'); 
+    console.log('Servidor SOAP escuchando en http://localhost:6789/usuarioService?wsdl'); 
 });
