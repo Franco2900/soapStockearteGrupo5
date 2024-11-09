@@ -1,11 +1,11 @@
-<wsdl:definitions targetNamespace="http://localhost:9000/filtroService"
+<wsdl:definitions targetNamespace="http://localhost:6789/filtroService"
     xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
-    xmlns:tns="http://localhost:9000/filtroService"
+    xmlns:tns="http://localhost:6789/filtroService"
     xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     
     <wsdl:types>
-        <xsd:schema targetNamespace="http://localhost:9000/filtroService">
+        <xsd:schema targetNamespace="http://localhost:6789/filtroService">
 
             <xsd:element name="traerFiltroRequest" type="tns:traerFiltroRequest"/>
             <xsd:element name="traerFiltroResponse" type="tns:traerFiltroResponse"/>
@@ -204,7 +204,7 @@
     
     <wsdl:service name="filtroService">
         <wsdl:port name="filtroServicePort" binding="tns:filtroServiceBinding">
-            <soap:address location="http://localhost:9000/filtroService"/>
+            <soap:address location="http://localhost:6789/filtroService"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

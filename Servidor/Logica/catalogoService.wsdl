@@ -1,11 +1,11 @@
-<wsdl:definitions targetNamespace="http://localhost:9000/catalogoService"
+<wsdl:definitions targetNamespace="http://localhost:6789/catalogoService"
     xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
-    xmlns:tns="http://localhost:9000/catalogoService"
+    xmlns:tns="http://localhost:6789/catalogoService"
     xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
     xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 
     <wsdl:types>
-        <xsd:schema targetNamespace="http://localhost:9000/catalogoService">
+        <xsd:schema targetNamespace="http://localhost:6789/catalogoService">
              <xsd:element name="crearCatalogoRequest" type="tns:crearCatalogoRequest"/>
             <xsd:element name="crearCatalogoResponse" type="tns:crearCatalogoResponse"/>
             <xsd:element name="borrarCatalogoRequest" type="tns:borrarCatalogoRequest"/>
@@ -329,7 +329,7 @@
 
     <wsdl:service name="catalogoService">
         <wsdl:port name="catalogoServicePort" binding="tns:catalogoServiceBinding">
-            <soap:address location="http://localhost:9000/catalogoService"/>
+            <soap:address location="http://localhost:6789/catalogoService"/>
         </wsdl:port>
     </wsdl:service>
 

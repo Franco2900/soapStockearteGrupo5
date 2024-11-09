@@ -341,8 +341,8 @@ async function traerCatalogos(args) {
     try {
 
         var resultadosConsulta = await conexionDataBase.query(`SELECT cxp.*,p.nombre,p.talle,p.foto,p.color FROM catalogo c
-        INNER JOIN catalogo_x_producto cxp on c.titulo = cxp.titulo
-        INNER JOIN producto p on p.codigo = cxp.producto_codigo
+        LEFT JOIN catalogo_x_producto cxp on c.titulo = cxp.titulo
+        LEFT JOIN producto p on p.codigo = cxp.producto_codigo
         WHERE c.tienda_codigo = '${args.tienda_codigo}' `, {});
 
         for (var i = 0; i < resultadosConsulta.length; i++) {

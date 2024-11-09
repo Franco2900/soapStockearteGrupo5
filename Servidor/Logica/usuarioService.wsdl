@@ -1,7 +1,7 @@
-<wsdl:definitions targetNamespace="http://localhost:9000/usuarioService" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://localhost:9000/usuarioService" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<wsdl:definitions targetNamespace="http://localhost:6789/usuarioService" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://localhost:6789/usuarioService" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     
     <wsdl:types>
-        <xsd:schema targetNamespace="http://localhost:9000/usuarioService">
+        <xsd:schema targetNamespace="http://localhost:6789/usuarioService">
 
             <xsd:element name="cargarUsuariosRequest" type="tns:cargarUsuariosRequest"/>
             <xsd:element name="cargarUsuariosResponse" type="tns:cargarUsuariosResponse"/>
@@ -51,7 +51,7 @@
 
     <wsdl:service name="usuarioService">
         <wsdl:port name="usuarioServicePort" binding="tns:usuarioServiceBinding">
-            <soap:address location="http://localhost:9000/usuarioService"/>
+            <soap:address location="http://localhost:6789/usuarioService"/>
         </wsdl:port>
     </wsdl:service>
 
