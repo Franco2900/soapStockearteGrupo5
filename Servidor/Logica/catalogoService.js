@@ -214,6 +214,16 @@ async function crearCatalogoPDF(args) {
     const titulo = args.titulo;
     const codigoTienda = args.tienda_codigo;
 
+    var resultados = await conexionDataBase.query(
+        `SELECT EXISTS(SELECT titulo FROM catalogo WHERE titulo = ?) AS existe`,
+        [titulo]
+    );
+    var existeCatalogo = resultados[0].existe;
+
+    if (existeCatalogo) {
+        return;
+    }
+
     return new Promise(async (resolve, reject) => {
         const pdf = new PDFDocument();
         let buffers = [];
@@ -341,8 +351,8 @@ async function traerCatalogos(args) {
     try {
 
         var resultadosConsulta = await conexionDataBase.query(`SELECT cxp.*,p.nombre,p.talle,p.foto,p.color FROM catalogo c
-        LEFT JOIN catalogo_x_producto cxp on c.titulo = cxp.titulo
-        LEFT JOIN producto p on p.codigo = cxp.producto_codigo
+        INNER JOIN catalogo_x_producto cxp on c.titulo = cxp.titulo
+        INNER JOIN producto p on p.codigo = cxp.producto_codigo
         WHERE c.tienda_codigo = '${args.tienda_codigo}' `, {});
 
         for (var i = 0; i < resultadosConsulta.length; i++) {
@@ -410,7 +420,19 @@ async function desasignarProductos(args) {
             AND producto_codigo='${codigo}'`, {});
             console.log('\nProducto quitado');
         }
-        console.log('\nCatalogo modificado');
+
+        var resultados = await conexionDataBase.query(
+            `SELECT EXISTS(SELECT titulo FROM catalogo_x_producto WHERE titulo = ?) AS existe`,
+            [titulo]);
+
+        var existeCatalogo = resultados[0].existe;
+        if (existeCatalogo){
+            console.log('\nCatalogo modificado');
+        } else {
+            await conexionDataBase.query(`DELETE FROM catalogo WHERE titulo = '${titulo}'`, {});
+            console.log('\nCatalogo eliminado por vacio');
+        }
+        
 
         return;
     }

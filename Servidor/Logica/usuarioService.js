@@ -77,7 +77,7 @@ async function cargarUsuarios(args)
         var lineas = 1; // Las lineas en los archivos .csv empiezan a partir del 1
         var lineasConErrores = [];
 
-        // Verificación - Campos vacios (y existencia del código de tienda)
+        // Verificación - Campos vacios
         for(var i = 0; i < datosUsuarios.length ; i++)
         {
             // Verifico que la variable NO sea una de las siguientes: false, 0, "", null, undefined, NaN 
@@ -93,6 +93,20 @@ async function cargarUsuarios(args)
                 lineasConErrores.push(i);
             } 
         }
+
+        // Verificación - Existencia de tienda
+        for(var i = 0; i < datosUsuarios.length ; i++)
+        {
+            var resultados = await conexionDataBase.query(
+                `SELECT EXISTS(SELECT codigo FROM tienda WHERE codigo = ?) AS existe`,
+                [datosUsuarios[i].CodigoTienda]
+            );
+            var existeTienda = resultados[0].existe;
+            if (!existeTienda && datosUsuarios[i].CodigoTienda.length>0 ) {
+                observaciones += `En la linea ${i+lineas}, no existe la tienda\n`;
+            }
+        }
+
 
 
         // Verificación: Estado de la tienda (si está deshabilitada, no da de alta el usuario)
@@ -114,7 +128,7 @@ async function cargarUsuarios(args)
             
             if (!tiendaHabilitada) 
             {
-                observaciones += `La tienda de la linea ${i+lineas} está deshabilitada\n`;
+                observaciones += `La tienda ${tiendasConsulta[i].codigo} de la linea ${i+lineas} está deshabilitada\n`;
                 lineasConErrores.push(i);
             }
         }
@@ -133,7 +147,7 @@ async function cargarUsuarios(args)
                 }
             }
         }
-
+        
 
         // Verificación - Existencia de usuario en la base de datos
         for(var i = 0; i < datosUsuarios.length ; i++)

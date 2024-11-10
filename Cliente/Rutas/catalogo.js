@@ -241,14 +241,19 @@ router.post('/', async (req, res) => {
         var clienteSoap = await crearClienteSoap('http://localhost:6789/catalogoService?wsdl'); // El cliente tiene que escuchar en la misma ruta que el servidor provee
         const respuestaServidor = await clienteSoap.crearCatalogoAsync({ codigos: req.body.codigos, titulo:req.body.titulo, tienda_codigo:req.body.tienda_codigo});
         var respuesta = respuestaServidor[0]; // Devuelve 3 cosas: los datos procesados, la respuesta del servidor en formato XML y la solicitud enviada por el cliente en formato XML
-
-        // DEBUG
+        if (respuesta == null) {
+            res.send(`<script>alert('Ya existe un catalogo con el mismo titulo.'); window.location.href = '/';</script>`);
+            
+        } else {
+            // DEBUG
         console.log("\nRespuesta del servidor: ");
         console.log(respuesta);
 
         //res.send('Catálogo creado por el servidor recibido exitosamente');
         res.send(respuestaServidor[0]);
+        }
     }
+        
     catch(error)
     {
         console.log(error);
