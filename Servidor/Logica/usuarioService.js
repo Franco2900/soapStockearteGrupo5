@@ -161,7 +161,7 @@ async function cargarUsuarios(args)
             }
         }
 
-        
+/*        
         // Elimino las lineas con errores
         for(var i = 0; i < datosUsuarios.length ; i++)
         {
@@ -170,7 +170,19 @@ async function cargarUsuarios(args)
                 datosUsuarios.splice(i, 1);
                 i--;
             }
+        }*/
+
+        // Crea un nuevo arreglo con las líneas correctas
+        var datosUsuariosCorregidos = [];
+            
+        for (var i = 0; i < datosUsuarios.length; i++) {
+          if (!lineasConErrores.includes(i)) {
+            datosUsuariosCorregidos.push(datosUsuarios[i]);
+          }
         }
+        
+        // Reemplaza el arreglo original con el corregido
+        datosUsuarios = datosUsuariosCorregidos;
 
         console.log(observaciones);
         console.log(`Hay en total ${lineasConErrores.length} lineas con errores`);
