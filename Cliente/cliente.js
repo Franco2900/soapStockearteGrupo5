@@ -12,7 +12,7 @@ app.use(express.json() );
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecifications) ); // Indico en que debe mostrar la documentación swagger
 
 app.use(cors({
-    origin: 'http://localhost:5173', // Permitir sólo este origen
+    origin: 'http://localhost:5173', // Permite sólo este origen
     methods: ['GET', 'POST', 'PUT','DELETE' ],        // Métodos permitidos, según tus necesidades
     allowedHeaders: ['Content-Type', 'Authorization'],
     exposedHeaders: ['Content-Type', 'Accept']
@@ -27,7 +27,7 @@ app.use('/usuario', require('./Rutas/usuario.js') );
 
 /******************************************* INICIO CLIENTE ***************************************************/
 
-// Iniciar el cliente en el puerto 7000
+// Inicia el cliente en el puerto 7000
 app.listen(7000, () => {
     console.log('Cliente ejecutándose en http://localhost:7000');
 });

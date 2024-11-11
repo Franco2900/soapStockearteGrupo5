@@ -20,8 +20,8 @@ const usuarioService = {
                 console.log(args);
 
                 // DEBUG
-                const archivoDecodificado = Buffer.from(args.archivoCSV, 'base64'); // Verificar este paso
-                fs.writeFileSync("./datosDeUsuarios.csv", archivoDecodificado); // Escribir archivo
+                const archivoDecodificado = Buffer.from(args.archivoCSV, 'base64');
+                fs.writeFileSync("./datosDeUsuarios.csv", archivoDecodificado);
 
                 // Defino la lógica del servicio
                 var observaciones = await cargarUsuarios(args.archivoCSV);
@@ -160,17 +160,6 @@ async function cargarUsuarios(args)
                 lineasConErrores.push(i);
             }
         }
-
-/*        
-        // Elimino las lineas con errores
-        for(var i = 0; i < datosUsuarios.length ; i++)
-        {
-            if(lineasConErrores.includes(i) )
-            {
-                datosUsuarios.splice(i, 1);
-                i--;
-            }
-        }*/
 
         // Crea un nuevo arreglo con las líneas correctas
         var datosUsuariosCorregidos = [];

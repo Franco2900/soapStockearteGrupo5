@@ -228,15 +228,15 @@ async function crearCatalogoPDF(args) {
         const pdf = new PDFDocument();
         let buffers = [];
 
-        pdf.on('data', buffers.push.bind(buffers)); // Almacenar chunks en un array
+        pdf.on('data', buffers.push.bind(buffers));
         pdf.on('end', () => {
-            const pdfBuffer = Buffer.concat(buffers); // Combinar los buffers
-            const base64Pdf = pdfBuffer.toString('base64'); // Convertir a base64
+            const pdfBuffer = Buffer.concat(buffers);
+            const base64Pdf = pdfBuffer.toString('base64'); // Convierte el string a base64
             resolve(base64Pdf); // Resolver con el base64
         });
 
         pdf.on('error', (error) => {
-            reject(error); // En caso de error
+            reject(error);
         });
 
         const anchoPagina = pdf.page.width;
@@ -289,7 +289,7 @@ async function crearCatalogoPDF(args) {
             console.log(error);
         }
 
-        pdf.end(); // Finalizar el PDF
+        pdf.end();
     });
 };
 
@@ -360,14 +360,14 @@ async function traerCatalogos(args) {
         };
 
 
-        // Agrupamos los productos por título, donde cada uno tiene un arreglo de productos
+        // Agrupa los productos por título, donde cada uno tiene un arreglo de productos
         resultadosConsulta = Object.values(resultadosConsulta.reduce((acc, row) => {
-            // Verificamos si el titulo es distinto al anterior
+            // Verifica si el titulo es distinto al anterior
             if (!acc[row.titulo]) {
                 acc[row.titulo] = { titulo: row.titulo, productos: [] };
             }
 
-            // Agrega el producto a la lista de productos para ese título
+            // Agrega el producto a la lista de productos para ese titulo
             acc[row.titulo].productos.push({
                 producto_codigo: row.producto_codigo,
                 nombre: row.nombre,

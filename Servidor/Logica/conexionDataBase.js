@@ -8,28 +8,6 @@ var conexion = mysql.createConnection({ // Creo una conexión a la base de datos
   database: 'Stockearte'
 })
 
-/*function conectarseALaBaseDeDatos() // Me conecto a la base de datos
-{
-    return new Promise((resolve, reject) => {
-
-      conexion.connect(function (error) {
-        if (error) 
-        {
-            console.log('************************************************************');
-            console.log('Problemas de conexion con mysql');
-            return reject(error);
-        } 
-        else {
-            console.log('************************************************************');
-            console.log('Conexión exitosa con la base de datos');
-            resolve();
-        }
-      });
-
-    });
-}*/
-
-
 // Función para ejecutar un comando SQL y devolver una promesa
 function query(comandoSQL, args) 
 {
